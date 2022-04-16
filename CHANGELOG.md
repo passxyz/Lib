@@ -1,5 +1,11 @@
 ## Change log
 
+### 2.0.1-rc.1
+- Upgraded to .NET MAUI RC1
+- PassXYZLib moved to a separate project
+
+---
+Version `1.x.x` is built for Xamarin.Forms
 ### Release 1.3.8
 
 ### Release 1.3.7
