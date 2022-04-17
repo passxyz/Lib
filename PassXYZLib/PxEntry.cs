@@ -9,22 +9,37 @@ using KeePassLib.Utility;
 using Image = SkiaSharp.SKBitmap;
 
 using PassXYZLib.Resources;
-// using PassXYZ.Vault.Resx;
 
 namespace PassXYZLib
 {
     public class PxEntry : PwEntry
     {
-        public PxEntry(bool bCreateNewUuid, bool bSetTimes) : base(bCreateNewUuid, bSetTimes) { }
+        public PxEntry(bool bCreateNewUuid, bool bSetTimes) : base(bCreateNewUuid, bSetTimes)
+        {
+            ImgSource = new FontImageSource
+            {
+                FontFamily = "FontAwesomeRegular",
+                Glyph = IsGroup ? FontAwesomeRegular.Folder : FontAwesomeRegular.File,
+                Color = Microsoft.Maui.Graphics.Colors.Black
+            };
+        }
 
-        public PxEntry() : base() { }
+        public PxEntry() : base() 
+        {
+            ImgSource = new FontImageSource
+            {
+                FontFamily = "FontAwesomeRegular",
+                Glyph = IsGroup ? FontAwesomeRegular.Folder : FontAwesomeRegular.File,
+                Color = Microsoft.Maui.Graphics.Colors.Black
+            };
+        }
 
         /// <summary>
         /// Create a PxEntry instance from a JSON string.
         /// </summary>
         /// <param name="str">JSON data</param>
         /// <param name="password">Password of PwEntry</param>
-        public PxEntry(string str, string? password = null, bool isJson = true) : base(true, true)
+        public PxEntry(string str, string password = null, bool isJson = true) : base(true, true)
         {
             if (isJson)
             {
@@ -54,13 +69,20 @@ namespace PassXYZLib
                 Name = str;
                 Notes = password;
             }
+
+            ImgSource = new FontImageSource
+            {
+                FontFamily = "FontAwesomeRegular",
+                Glyph = IsGroup ? FontAwesomeRegular.Folder : FontAwesomeRegular.File,
+                Color = Microsoft.Maui.Graphics.Colors.Black
+            };
         }
 
-		/// <summary>
-		/// Create a PxEntry instance from a PwEntry.
-		/// </summary>
-		/// <param name="entry">a PwEntry instance</param>
-		public PxEntry(PwEntry entry)
+        /// <summary>
+        /// Create a PxEntry instance from a PwEntry.
+        /// </summary>
+        /// <param name="entry">a PwEntry instance</param>
+        public PxEntry(PwEntry entry)
 		{
 			Uuid = entry.Uuid;
 			AssignProperties(entry, false, true, true);

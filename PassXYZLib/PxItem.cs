@@ -336,7 +336,7 @@ namespace PassXYZLib
         {
             item.ImgSource = new FontImageSource
             {
-                FontFamily = "FontAwesomeSolid",
+                FontFamily = "FontAwesomeRegular",
                 Glyph = item.IsGroup ? FontAwesomeRegular.Folder : FontAwesomeRegular.File,
                 Color = Microsoft.Maui.Graphics.Colors.Black
             };
@@ -426,7 +426,10 @@ namespace PassXYZLib
                 }
             }
 
-            SetDefaultIcon(item);
+            if(item.ImgSource == null)
+            {
+                SetDefaultIcon(item);
+            }
         }
 
         public static string GetCustomIcon(this Item item)

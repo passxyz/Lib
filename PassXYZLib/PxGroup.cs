@@ -5,20 +5,38 @@ using System.Text;
 using KeePassLib;
 using KeePassLib.Interfaces;
 
+using PassXYZLib.Resources;
+
 namespace PassXYZLib
 {
     public class PxGroup: PwGroup
     {
-        public PxGroup(bool bCreateNewUuid, bool bSetTimes) : base(bCreateNewUuid, bSetTimes) { }
+        public PxGroup(bool bCreateNewUuid, bool bSetTimes) : base(bCreateNewUuid, bSetTimes) 
+		{
+			ImgSource = new FontImageSource
+			{
+				FontFamily = "FontAwesomeRegular",
+				Glyph = IsGroup ? FontAwesomeRegular.Folder : FontAwesomeRegular.File,
+				Color = Microsoft.Maui.Graphics.Colors.Black
+			};
+		}
 
-        public PxGroup() : base() { }
+		public PxGroup() : base() 
+		{
+			ImgSource = new FontImageSource
+			{
+				FontFamily = "FontAwesomeRegular",
+				Glyph = IsGroup ? FontAwesomeRegular.Folder : FontAwesomeRegular.File,
+				Color = Microsoft.Maui.Graphics.Colors.Black
+			};
+		}
 
 		/// <summary>
 		/// Create a PxGroup instance from a JSON string
 		/// </summary>
 		/// <param name="str">JSON data</param>
 		/// <param name="password">Password of PwGroup</param>
-		public PxGroup(string str, string? password = null, bool isJson = true) : base(true, true)
+		public PxGroup(string str, string password = null, bool isJson = true) : base(true, true)
 		{
 			if (isJson) 
 			{
@@ -39,8 +57,14 @@ namespace PassXYZLib
 				Name = str;
 				Notes = password;
 			}
-		}
 
+			ImgSource = new FontImageSource
+			{
+				FontFamily = "FontAwesomeRegular",
+				Glyph = IsGroup ? FontAwesomeRegular.Folder : FontAwesomeRegular.File,
+				Color = Microsoft.Maui.Graphics.Colors.Black
+			};
+		}
 	}
 
     public static class PwGroupEx 
