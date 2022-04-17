@@ -328,12 +328,17 @@ namespace PassXYZLib
             }
         }
 
+        /// <summary>
+        /// This is an extension method of <c>Item</c> to set default icon
+        /// </summary>
+        // TODO: Retrieve color from static resource
         public static void SetDefaultIcon(this Item item)
         {
             item.ImgSource = new FontImageSource
             {
                 FontFamily = "FontAwesomeSolid",
-                Glyph = item.IsGroup ? FontAwesomeSolid.Folder : FontAwesomeSolid.File
+                Glyph = item.IsGroup ? FontAwesomeRegular.Folder : FontAwesomeRegular.File,
+                Color = Microsoft.Maui.Graphics.Colors.Black
             };
         }
 

@@ -238,14 +238,21 @@ namespace PassXYZLib
             { "wechat", FontAwesomeBrands.Weixin }
         };
 
-        public static ImageSource GetImage(string key) 
+        /// <summary>
+        /// Get icon from field key
+        /// </summary>
+        /// <param name="key">field key</param>
+		/// <returns>Returns ImageSource</returns>
+        // TODO: Retrieve color from static resource
+        public static ImageSource GetImage(string key)
         { 
             if (BrandIcons.ContainsKey(key))
             {
                 var brandIconSource = new FontImageSource
                 {
                     FontFamily = "FontAwesomeBrands",
-                    Glyph = BrandIcons[key]
+                    Glyph = BrandIcons[key],
+                    Color = Microsoft.Maui.Graphics.Colors.Black
                 };
                 return brandIconSource;
             }
@@ -254,7 +261,8 @@ namespace PassXYZLib
                 var regularIconSource = new FontImageSource
                 {
                     FontFamily = "FontAwesomeRegular",
-                    Glyph = RegularIcons[key]
+                    Glyph = RegularIcons[key],
+                    Color = Microsoft.Maui.Graphics.Colors.Black
                 };
                 return regularIconSource;
             }
@@ -263,7 +271,8 @@ namespace PassXYZLib
                 var solidIconSource = new FontImageSource
                 {
                     FontFamily = "FontAwesomeSolid",
-                    Glyph = FontAwesomeSolid.File
+                    Glyph = FontAwesomeSolid.File,
+                    Color = Microsoft.Maui.Graphics.Colors.Black
                 };
 
                 if (SolidIcons.ContainsKey(key))
