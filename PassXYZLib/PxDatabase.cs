@@ -1060,7 +1060,21 @@ namespace PassXYZLib
 	/// </summary>
 	public sealed class PasswordDb : PxDatabase
 	{
-		private static PasswordDb instance = null;
+        private static readonly object _sync = new object();
+        private static bool _isBusy = false;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            private set
+            {
+                lock (_sync)
+                {
+                    _isBusy = value;
+                }
+            }
+        }
+
+        private static PasswordDb instance = null;
 
 		private PasswordDb() { }
 		public static PasswordDb Instance 
@@ -1075,7 +1089,25 @@ namespace PassXYZLib
 			}
 		}
 
-		public PwCustomIcon GetPwCustomIcon(PwUuid pwIconId)
+        public async Task SaveAsync()
+        {
+            if (IsBusy)
+            {
+                Debug.WriteLine($"PasswordDb: SaveAsync IsBusy={IsBusy}");
+                return;
+            }
+
+            IsBusy = true;
+            KPCLibLogger logger = new KPCLibLogger();
+            DescriptionChanged = DateTime.UtcNow;
+            await Task.Run(() => {
+                Save(logger);
+                Debug.WriteLine($"PasswordDb: SaveAsync completed");
+                IsBusy = false;
+            });
+        }
+
+        public PwCustomIcon GetPwCustomIcon(PwUuid pwIconId)
 		{
 			if (pwIconId != PwUuid.Zero) 
 			{
