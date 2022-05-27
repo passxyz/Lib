@@ -10,6 +10,7 @@ using SkiaSharp;
 
 using KPCLib;
 using KeePassLib;
+using KeePassLib.Security;
 using KeePassLib.Utility;
 
 using PassXYZLib.Resources;
@@ -535,6 +536,171 @@ namespace PassXYZLib
         {
             return !item.IsGroup && ((PwEntry)item).IsNotes();
         }
+
+        public static Field AddField(this Item item, string key, string value, bool isProtected)
+        {
+            Field field = null;
+            if (item is PwEntry entry)
+            {
+                if (key == PxDefs.PxCustomDataOtpUrl)
+                {
+                    // Add or update OTP URL
+                    ((PxEntry)entry).UpdateOtpUrl(value);
+                }
+                else
+                {
+                    string k = entry.IsPxEntry() ? entry.EncodeKey(key) : key;
+
+                    entry.Strings.Set(k, new ProtectedString(isProtected, value));
+                    if (key.EndsWith(PwDefs.UrlField) && entry.CustomIconUuid.Equals(PwUuid.Zero))
+                    {
+                        // If this is a URL field and there is no custom icon, we can try to add a custom icon by URL.
+                        entry.SetCustomIconByUrl(value);
+                    }
+
+                    if (entry.IsPxEntry())
+                    {
+                        field = new Field(k, value, isProtected, FieldIcons.GetImage, entry.EncodeKey(k));
+                    }
+                    else
+                    {
+                        field = new Field(k, value, isProtected);
+                    }
+                }
+            }
+            else
+            {
+                throw new ArgumentException("AddField: item type is not an entry!");
+            }
+            return field;
+        }
+
+        public static Field AddBinaryField(this Item item, string key, byte[] binaryArrage, string label = null)
+        {
+            Field field = default;
+            if (item is PwEntry entry) 
+            {
+                if (binaryArrage != null)
+                {
+                    ProtectedBinary pb = new ProtectedBinary(false, binaryArrage);
+                    entry.Binaries.Set(key, pb);
+
+                    field = new Field(key, $"{label} {entry.Binaries.UCount}", false)
+                    {
+                        IsBinaries = true,
+                        Binary = entry.Binaries.Get(key),
+                        ImgSource = FieldIcons.GetImage(key)
+                    };
+                }
+            }
+            else
+            {
+                throw new ArgumentException("AddBinaryField: item type is not an entry!");
+            }
+            return field;
+        }
+
+        public static void UpdateField(this Item item, string key, string value, bool isProtected)
+        {
+            if (item is PwEntry entry)
+            {
+                string k = entry.IsPxEntry() ? entry.EncodeKey(key) : key;
+                if (entry.Strings.Exists(k))
+                {
+                    entry.Strings.Set(k, new ProtectedString(isProtected, value));
+                    if (key.EndsWith(PwDefs.UrlField) && entry.CustomIconUuid.Equals(PwUuid.Zero))
+                    {
+                        // If this is a URL field and there is no custom icon, we can try to add a custom icon by URL.
+                        entry.SetCustomIconByUrl(value);
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("UpdateField: field.Key does not exist!");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("UpdateField: item type is not an entry!");
+            }
+        }
+
+        public static void DeleteField(this Item item, Field field) 
+        {
+            if (field == null)
+            {
+                throw new ArgumentNullException(nameof(field));
+            }
+
+            if (item is PwEntry entry) 
+            {
+                if (field.IsBinaries)
+                {
+                    if (entry.Binaries.Exists(field.Key))
+                    {
+                        if (entry.Binaries.Remove(field.Key))
+                        {
+
+                            Debug.WriteLine($"DeleteField: Attachment {field.Key} deleted.");
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"DeleteField: Cannot delete Attachment {field.Key}.");
+                        }
+                    }
+                }
+                else
+                {
+                    string key = field.IsEncoded ? field.EncodedKey : field.Key;
+                    if (entry.Strings.Exists(key))
+                    {
+                        if (entry.Strings.Remove(key))
+                        {
+
+                            Debug.WriteLine($"DeleteField: Field {field.Key} deleted.");
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"DeleteField: Cannot delete field {field.Key}.");
+                        }
+                    }
+                }
+            }
+
+        }
+
+        public static List<Field> GetFields(this Item item) 
+        {
+            if(item is PwEntry entry)
+            {
+                return entry.GetFields(GetImage: FieldIcons.GetImage);
+            }
+            else { return null; }
+        }
+
+        public static string GetNotesInHtml(this Item item) 
+        {
+            if (item is PwEntry entry)
+            {
+                return entry.GetNotesInHtml();
+            }
+            else { return item.Notes; }
+        }
         #endregion
+    }
+
+    /// <summary>
+    /// PxField is a static class which defines a set of extension methods for Field.
+    /// </summary>
+    public static class PxField 
+    {
+        public static byte[] GetBinaryData(this Field field)
+        {
+            if(field.Binary is ProtectedBinary binary)
+            {
+                return binary.ReadData();
+            }
+            else { return null; }
+        }
     }
 }
