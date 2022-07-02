@@ -452,12 +452,23 @@ namespace PassXYZLib
                     }
                     else
                     {
-                        Debug.WriteLine("SetIcon: PasswordDb is closed");
+                        Debug.WriteLine("GetCustomIcon: PasswordDb is closed");
                     }
                 }
                 else
                 {
-                    Debug.WriteLine("SetIcon: No PasswordDb instance");
+                    Debug.WriteLine("GetCustomIcon: No PasswordDb instance");
+                }
+            }
+            else 
+            {
+                if (item.IsGroup) 
+                {
+                    return "folder.svg";
+                }
+                else 
+                {
+                    return "file.svg";
                 }
             }
             return string.Empty;
