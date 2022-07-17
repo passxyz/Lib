@@ -310,6 +310,7 @@ namespace PassXYZLib
                 return "KeePass";
             }
         }
+        public static ItemSubType GetItemSubType(this ItemSubType subType, string type)
         // The end of PxDefs
     }
 
