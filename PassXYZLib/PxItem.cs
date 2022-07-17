@@ -571,7 +571,7 @@ namespace PassXYZLib
 
                     if (entry.IsPxEntry())
                     {
-                        field = new Field(k, value, isProtected, FieldIcons.GetImage, entry.EncodeKey(k));
+                        field = new Field(key, value, isProtected, FieldIcons.GetImage, entry.EncodeKey(k));
                     }
                     else
                     {
@@ -615,7 +615,7 @@ namespace PassXYZLib
         {
             if (item is PwEntry entry)
             {
-                string k = entry.IsPxEntry() ? entry.EncodeKey(key) : key;
+                string k = entry.IsPxEntry() ? entry.FindEncodeKey(key) : key;
                 if (entry.Strings.Exists(k))
                 {
                     entry.Strings.Set(k, new ProtectedString(isProtected, value));
