@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>PassXYZLib</id>
-        <version>2.0.1-rc.1</version>
+        <version>2.0.2</version>
         <authors>Roger Ye</authors>
 		<owners>Roger Ye</owners>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -13,47 +13,37 @@
       - Fixed dependency issue
     </releaseNotes>
 		<copyright>Roger Ye</copyright>
-		<repository url="https://github.com/passxyz/KPCLib" />
+		<repository url="https://github.com/passxyz/Lib" />
 		<dependencies>
       <group targetFramework="net6.0">
         <dependency id="HtmlAgilityPack" version="1.11.42" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Dependencies" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Extensions" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="2.1.5.22" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="2.1.5.28" exclude="Build,Analyzers" />
       </group>
       <group targetFramework="net6.0-android31.0">
         <dependency id="HtmlAgilityPack" version="1.11.42" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Dependencies" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Extensions" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="2.1.5.22" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="2.1.5.28" exclude="Build,Analyzers" />
       </group>
-      <group targetFramework="net6.0-ios15.2">
+      <group targetFramework="net6.0-ios15.4">
         <dependency id="HtmlAgilityPack" version="1.11.42" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Dependencies" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Extensions" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="2.1.5.22" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="2.1.5.28" exclude="Build,Analyzers" />
       </group>
-      <group targetFramework="net6.0-maccatalyst15.2">
+      <group targetFramework="net6.0-maccatalyst15.4">
         <dependency id="HtmlAgilityPack" version="1.11.42" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Dependencies" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Extensions" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="2.1.5.22" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="2.1.5.28" exclude="Build,Analyzers" />
       </group>
       <group targetFramework="net6.0-windows10.0.19041">
         <dependency id="HtmlAgilityPack" version="1.11.42" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Dependencies" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.Maui.Extensions" version="6.0.200-preview.14.5099" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.1" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="2.1.5.22" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="2.1.5.28" exclude="Build,Analyzers" />
       </group>
     </dependencies>
         <summary>PassXYZLib added additional features for .NET MAUI.</summary>
@@ -62,14 +52,13 @@
     <file src="PassXYZLib/bin/Release/net6.0/PassXYZLib.dll" target="lib/net6.0/PassXYZLib.dll" />
     <file src="PassXYZLib/bin/Release/net6.0/PureOtp.dll" target="lib/net6.0/PureOtp.dll" />
     <file src="PassXYZLib/bin/Release/net6.0-android/PassXYZLib.dll" target="lib/net6.0-android31.0/PassXYZLib.dll" />
-    <file src="PassXYZLib/bin/Release/net6.0-android/PassXYZLib.aar" target="lib/net6.0-android31.0/PassXYZLib.aar" />
     <file src="PassXYZLib/bin/Release/net6.0-android/PassXYZLib.xml" target="lib/net6.0-android31.0/PassXYZLib.xml" />
     <file src="PassXYZLib/bin/Release/net6.0-android/PureOtp.dll" target="lib/net6.0-android31.0/PureOtp.dll" />
-    <file src="PassXYZLib/bin/Release/net6.0-ios/PassXYZLib.dll" target="lib/net6.0-ios15.2/PassXYZLib.dll" />
-    <file src="PassXYZLib/bin/Release/net6.0-ios/PureOtp.dll" target="lib/net6.0-ios15.2/PureOtp.dll" />
-    <file src="PassXYZLib/bin/Release/net6.0-maccatalyst/PassXYZLib.dll" target="lib/net6.0-maccatalyst15.2/PassXYZLib.dll" />
-    <file src="PassXYZLib/bin/Release/net6.0-maccatalyst/PureOtp.dll" target="lib/net6.0-maccatalyst15.2/PureOtp.dll" />
-    <file src="PassXYZLib/bin/Release/net6.0-windows10.0.19041/PassXYZLib.dll" target="lib/net6.0-windows10.0.19041/PassXYZLib.dll" />
-    <file src="PassXYZLib/bin/Release/net6.0-windows10.0.19041/PureOtp.dll" target="lib/net6.0-windows10.0.19041/PureOtp.dll" />
+    <file src="PassXYZLib/bin/Release/net6.0-ios/PassXYZLib.dll" target="lib/net6.0-ios15.4/PassXYZLib.dll" />
+    <file src="PassXYZLib/bin/Release/net6.0-ios/PureOtp.dll" target="lib/net6.0-ios15.4/PureOtp.dll" />
+    <file src="PassXYZLib/bin/Release/net6.0-maccatalyst/PassXYZLib.dll" target="lib/net6.0-maccatalyst15.4/PassXYZLib.dll" />
+    <file src="PassXYZLib/bin/Release/net6.0-maccatalyst/PureOtp.dll" target="lib/net6.0-maccatalyst15.4/PureOtp.dll" />
+    <file src="PassXYZLib/bin/Release/net6.0-windows10.0.19041.0/PassXYZLib.dll" target="lib/net6.0-windows10.0.19041/PassXYZLib.dll" />
+    <file src="PassXYZLib/bin/Release/net6.0-windows10.0.19041.0/PureOtp.dll" target="lib/net6.0-windows10.0.19041/PureOtp.dll" />
   </files>
 </package>
