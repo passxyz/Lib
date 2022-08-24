@@ -1,5 +1,8 @@
 ## Change log
 
+### 2.0.2
+- Built for .NET MAUI GA release
+
 ### 2.0.1-rc.1
 - Upgraded to .NET MAUI RC1
 - PassXYZLib moved to a separate project

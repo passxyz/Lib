@@ -47,6 +47,24 @@ namespace PassXYZLib
         }
 
         /// <summary>
+        /// Find the encoded key using a key in the field.
+        /// </summary>
+        /// <param name="entry">an instance of PwEntry</param>
+        /// <param name="key">key of Field</param>
+		/// <returns>encoded key</returns>
+        public static string FindEncodeKey(this PwEntry entry, string key)
+        {
+            if (PxDefs.IsPxEntry(entry))
+            { 
+                return PxDefs.FindEncodeKey(entry.Strings, key);
+            }
+            else 
+            {
+                return key;
+            }
+        }
+
+        /// <summary>
         /// Create a new encoded key for PxEntry.
         /// </summary>
         /// <param name="entry">an instance of PwEntry</param>

@@ -310,6 +310,17 @@ namespace PassXYZLib
                 return "KeePass";
             }
         }
+
+        public static ItemSubType GetItemSubType(this ItemSubType subType, string type)
+        {
+            if (type == ItemSubType.Group.ToString()) return ItemSubType.Group;
+            if (type == ItemSubType.Entry.ToString()) return ItemSubType.Entry;
+            if (type == ItemSubType.Notes.ToString()) return ItemSubType.Notes;
+            if (type == ItemSubType.PxEntry.ToString()) return ItemSubType.PxEntry;
+
+            return ItemSubType.None;
+        }
+
         // The end of PxDefs
     }
 
