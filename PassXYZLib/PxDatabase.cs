@@ -347,7 +347,7 @@ namespace PassXYZLib
 			Open(ioc, cmpKey, logger);
 		}
 
-		public string GetDeviceLockData(PassXYZLib.User user)
+		public static string GetDeviceLockData(PassXYZLib.User user)
         {
 			if (user.IsDeviceLockEnabled)
 			{
