@@ -15,6 +15,7 @@ using KeePassLib.Keys;
 using KeePassLib.Security;
 using KeePassLib.Serialization;
 using PassXYZLib.Resources;
+using PassXYZ.Services;
 
 namespace PassXYZLib
 {
@@ -321,9 +322,8 @@ namespace PassXYZLib
 			{
 				try 
 				{
-					//PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
-					var pxKeyProvider = new PassXYZ.Services.PxKeyProvider(user.Username, user.KeyFilePath);
-					if (pxKeyProvider.IsInitialized)
+                    var pxKeyProvider = new PassXYZ.Services.PxKeyProvider(user.Username, user.KeyFilePath);
+                    if (pxKeyProvider.IsInitialized)
 					{
 						KeyProviderQueryContext ctxKP = new KeyProviderQueryContext(new IOConnectionInfo(), false, false);
 						byte[] pbProvKey = pxKeyProvider.GetKey(ctxKP);
@@ -336,6 +336,7 @@ namespace PassXYZLib
 				}
 				catch (PassXYZ.Services.InvalidDeviceLockException ex)
                 {
+					Debug.WriteLine($"{ex.Message}");
 					try { cmpKey.AddUserKey(new KcpKeyFile(user.KeyFilePath)); }
 					catch (Exception exFile)
 					{
@@ -354,10 +355,10 @@ namespace PassXYZLib
 				try
 				{
 					PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
-					var pxKeyProvider = new PassXYZ.Services.PxKeyProvider(user.Username, false);
+					var pxKeyProvider = new PassXYZ.Services.PxKeyProvider(user.Username);
 					if (pxKeyProvider.IsInitialized)
 					{
-						return PassXYZ.Services.PxKeyData.ToBase64String(pxKeyProvider.KeyData);
+						return pxKeyProvider.ToString();
 					}
 				}
 				catch (PassXYZ.Services.InvalidDeviceLockException ex)
@@ -419,13 +420,13 @@ namespace PassXYZLib
 		/// If the device lock is enabled, we need to set DefaultFolder first.
 		/// </summary>
 		/// <param name="user">an instance of PassXYZLib.User</param>
-		public void New(PassXYZLib.User user)
+		public void New(PassXYZLib.User user, PxKeyProvider kp = null)
 		{
 			if (user == null) { Debug.Assert(false); throw new ArgumentNullException("PassXYZLib.User"); }
 
 			if (user.IsDeviceLockEnabled)
 			{
-				if(!CreateKeyFile(user))
+				if(!CreateKeyFile(user, kp))
                 {
 					throw new KeePassLib.Keys.InvalidCompositeKeyException();
 				}
@@ -438,7 +439,7 @@ namespace PassXYZLib
 			if (user.IsDeviceLockEnabled)
 			{
 				PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
-				var pxKeyProvider = new PassXYZ.Services.PxKeyProvider(user.Username, false);
+				var pxKeyProvider = new PxKeyProvider(user.Username, false);
 				if (pxKeyProvider.IsInitialized)
 				{
 					KeyProviderQueryContext ctxKP = new KeyProviderQueryContext(new IOConnectionInfo(), false, false);
@@ -465,55 +466,66 @@ namespace PassXYZLib
 		/// <param name="kp">a key provider instance. If it is null, the key file is created from the 
 		/// current system.</param>
 		/// <returns>true - created key file, false - failed to create key file.</returns>
-		private bool CreateKeyFile(PassXYZLib.User user, PassXYZ.Services.PxKeyProvider kp = null)
+		private bool CreateKeyFile(PassXYZLib.User user, PxKeyProvider kp = null)
 		{
 			PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
 			PassXYZ.Utils.Settings.User.Username = user.Username;
-			PassXYZ.Services.PxKeyProvider pxKeyProvider;
+			PxKeyProvider pxKeyProvider = kp;
 			if (kp == null)
 			{
-				pxKeyProvider = new PassXYZ.Services.PxKeyProvider();
-				return pxKeyProvider.CreateKeyFile(true);
+				pxKeyProvider = new PxKeyProvider();
 			}
-			else
-			{
-				pxKeyProvider = kp;
-				return pxKeyProvider.CreateKeyFile(false);
-			}
-		}
+            return pxKeyProvider.CreateKeyFile(user.Username, PxDataFile.KeyFilePath);
+        }
 
-		/// <summary>
-		/// Recreate a key file from a PxKeyData
-		/// </summary>
-		/// <param name="data">PxKeyData source</param>
-		/// <param name="username">username inside PxKeyData source</param>
-		/// <returns>true - created key file, false - failed to create key file.</returns>
-		public bool CreateKeyFile(string data, string username)
+        /// <summary>
+        /// Recreate a key file from a PxKeyData
+        /// </summary>
+        /// <param name="data">KeyData source</param>
+        /// <param name="username">username inside PxKeyData source</param>
+        /// <returns>true - created key file, false - failed to create key file.</returns>
+        public bool CreateKeyFile(string data, string username)
 		{
-			if (data.StartsWith(PxDefs.PxKeyFile))
+            PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
+            PassXYZ.Utils.Settings.User.Username = username;
+
+            if (data.StartsWith(PxDefs.PxKeyFile))
 			{
-				PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
-				PassXYZ.Utils.Settings.User.Username = username;
+				// Old key data
+                var msg = data.Substring(PxDefs.PxKeyFile.Length);
+                KeyData keyData = new OldKeyData(msg);
 
-				var msg = data.Substring(PxDefs.PxKeyFile.Length);
-				PassXYZ.Services.PxKeyData keyData = PassXYZ.Services.PxKeyData.FromBase64String(msg);
-				if (keyData != null)
-				{
-					PassXYZ.Services.PxKeyProvider pxKeyProvider = new PassXYZ.Services.PxKeyProvider(keyData);
-					if (pxKeyProvider.KeyData.Username == username)
-					{
-						if (pxKeyProvider.CreateKeyFile(false))
-						{
-							return true;
-						}
-					}
-				}
-			}
+                CreateKeyFile(keyData, username);
+            }
+            else if (data.StartsWith(PxDefs.PxJsonData))
+			{
+                // New key data
+                var msg = data.Substring(PxDefs.PxJsonData.Length);
+                KeyData keyData = new NewKeyData(msg);
 
-			return false;
+				CreateKeyFile(keyData, username);
+            }
+
+            return false;
 		}
 
-		private void EnsureRecycleBin(ref PwGroup pgRecycleBin)
+		private bool CreateKeyFile(KeyData keyData, string username)
+		{
+            if (keyData != null)
+            {
+                PxKeyProvider pxKeyProvider = new(keyData);
+                if (pxKeyProvider.IsValidUser(username))
+                {
+                    if (pxKeyProvider.CreateKeyFile(username, PxDataFile.KeyFilePath))
+                    {
+                        return true;
+                    }
+                }
+            }
+			return false;
+        }
+
+        private void EnsureRecycleBin(ref PwGroup pgRecycleBin)
 		{
 			if (pgRecycleBin == this.RootGroup)
 			{

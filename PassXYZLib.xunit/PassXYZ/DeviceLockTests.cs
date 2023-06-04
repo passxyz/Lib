@@ -10,6 +10,7 @@ using KeePassLib.Security;
 using KeePassLib.Serialization;
 using KeePassLib.Utility;
 using PassXYZLib;
+using PassXYZ.Services;
 
 namespace xunit.PassXYZ
 {
@@ -49,11 +50,19 @@ namespace xunit.PassXYZ
     [Collection("DeviceLock collection")]
     public class DeviceLockTests
     {
+        const string TEST_DB_KEY_DATA = "AAEAAAD/////AQAAAAAAAAAMAgAAAD5QYXNzWFlaLCBWZXJzaW9uPTIuNC40LjEsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49bnVsbAUBAAAAGlBhc3NYWVouU2VydmljZXMuUHhLZXlEYXRhCAAAAAhVc2VybmFtZQJJZAtEZXZpY2VNb2RlbBJEZXZpY2VNYW51ZmFjdHVyZXIKRGV2aWNlTmFtZQ1EZXZpY2VWZXJzaW9uDkRldmljZVBsYXRmb3JtC0RldmljZUlkaW9tAQEBAQEBAQECAAAABgMAAAAIa3BjbGlicHkGBAAAACAxQUQyNERDRTVBRTJERDRGQTQ2RDA3MjcwRDNCOTYzMgYFAAAADkxhdGl0dWRlIEU3NDQwBgYAAAAJRGVsbCBJbmMuBgcAAAAPREVTS1RPUC0yTUVLOFI3BggAAAAPMTAuMC4xODM2My4xNDQwBgkAAAADVVdQBgoAAAAHRGVza3RvcAs=";
         DeviceLockFixture passxyz;
 
         public DeviceLockTests(DeviceLockFixture deviceLockFixture)
         {
             this.passxyz = deviceLockFixture;
+        }
+
+        [Fact]
+        public void GetKeyDataTest() 
+        {
+            var data = PxKeyData.FromBase64String(TEST_DB_KEY_DATA);
+            Debug.WriteLine($"Username = {data.Username}");
         }
 
         [Fact]
