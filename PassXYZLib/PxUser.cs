@@ -58,7 +58,7 @@ namespace PassXYZLib
                 if (User.IsUserExist)
                 {
                     var lastWriteTime = File.GetLastWriteTime(User.Path);
-                    return Preferences.Get(User.FileName + nameof(LastWriteTime), lastWriteTime);
+                    return Preferences.Default.Get(User.FileName + nameof(LastWriteTime), lastWriteTime);
                 }
                 else
                 {
@@ -69,7 +69,7 @@ namespace PassXYZLib
             {
                 if (User.IsUserExist) 
                 {
-                    Preferences.Set(User.FileName + nameof(LastWriteTime), value);
+                    Preferences.Default.Set(User.FileName + nameof(LastWriteTime), value);
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace PassXYZLib
                 if (User.IsUserExist)
                 {
                     var fileInfo = new FileInfo(User.Path);
-                    return Preferences.Get(User.FileName + nameof(Length), fileInfo.Length);
+                    return Preferences.Default.Get(User.FileName + nameof(Length), fileInfo.Length);
                 }
                 else
                 {
@@ -93,7 +93,7 @@ namespace PassXYZLib
             {
                 if (User.IsUserExist)
                 {
-                    Preferences.Set(User.FileName + nameof(Length), value);
+                    Preferences.Default.Set(User.FileName + nameof(Length), value);
                 }
             }
         }
@@ -177,7 +177,7 @@ namespace PassXYZLib
             {
                 if (User.IsUserExist)
                 {
-                    return Preferences.Get(User.FileName, LastWriteTime != User.LocalFileStatus.LastWriteTime || Length != User.LocalFileStatus.Length);
+                    return Preferences.Default.Get(User.FileName, LastWriteTime != User.LocalFileStatus.LastWriteTime || Length != User.LocalFileStatus.Length);
                     //return LastWriteTime != User.LocalFileStatus.LastWriteTime ||Length != User.LocalFileStatus.Length;
                 }
                 else
@@ -190,7 +190,7 @@ namespace PassXYZLib
             {
                 if (User.IsUserExist)
                 {
-                    Preferences.Set(User.FileName, value);
+                    Preferences.Default.Set(User.FileName, value);
                 }
             }
         }
@@ -252,15 +252,16 @@ namespace PassXYZLib
         /// If this is too short, there is problem to apply sync package.
         /// </summary>
         public static int DefaultTimeout = 120;
+        private const string TimeoutKey = "AppTimeout";
 
         /// <summary>
         /// The Timeout value to close the database.
         /// </summary>
         public static int AppTimeout
         {
-            get => Preferences.Get(nameof(AppTimeout), DefaultTimeout);
+            get => Preferences.Default.Get(TimeoutKey, DefaultTimeout);
 
-            set => Preferences.Set(nameof(AppTimeout), value);
+            set => Preferences.Default.Set(TimeoutKey, value);
         }
 
         /// <summary>
@@ -458,8 +459,13 @@ namespace PassXYZLib
         public PxUser()
         { 
         }
-#endif // PASSXYZ_CLOUD_SERVICE
 
+        static PxUser()
+        {
+            var timeout = Preferences.Default.Get(TimeoutKey, DefaultTimeout);
+            Debug.WriteLine($"AppTimeout is {timeout}.");
+        }
+#endif // PASSXYZ_CLOUD_SERVICE
     }
 
     public class PxUserComparer : IEqualityComparer<PxUser>
