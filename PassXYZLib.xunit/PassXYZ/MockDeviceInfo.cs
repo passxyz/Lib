@@ -12,10 +12,10 @@ namespace PassXYZLib.xunit.PassXYZ
         public string Model => "Lib";
         public string Manufacturer => "PassXYZ";
         public string Name => "PassXYZLib";
-        public Version Version => new(1, 0, 0, 0);
+        public Version Version => new(1, 0, 1, 0);
         public string VersionString => Version.ToString();
-        public DevicePlatform Platform => new();
-        public DeviceIdiom Idiom => new();
-        public DeviceType DeviceType => new();
+        public DevicePlatform Platform => DevicePlatform.WinUI;
+        public DeviceIdiom Idiom => DeviceIdiom.Desktop;
+        public DeviceType DeviceType => DeviceType.Physical;
     }
 }

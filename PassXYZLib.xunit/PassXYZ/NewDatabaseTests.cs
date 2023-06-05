@@ -59,6 +59,14 @@ namespace PassXYZLib.xunit.PassXYZ
         }
 
         [Fact]
+        public void GetDeviceLockDataTest()
+        {
+            Connect();
+            var msg = PxDatabase.GetDeviceLockData(_testUser);
+            Debug.WriteLine(msg);
+        }
+
+        [Fact]
         public void DeleteUserTest()
         {
             _testUser.Delete();

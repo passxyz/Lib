@@ -17,7 +17,7 @@
 
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
-    <Version>2.1.1</Version>
+    <Version>2.1.2</Version>
     <NeutralLanguage>en-US</NeutralLanguage>
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>

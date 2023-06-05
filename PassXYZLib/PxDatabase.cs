@@ -16,6 +16,7 @@ using KeePassLib.Security;
 using KeePassLib.Serialization;
 using PassXYZLib.Resources;
 using PassXYZ.Services;
+using PassXYZ.Utils;
 
 namespace PassXYZLib
 {
@@ -484,32 +485,30 @@ namespace PassXYZLib
         /// <param name="data">KeyData source</param>
         /// <param name="username">username inside PxKeyData source</param>
         /// <returns>true - created key file, false - failed to create key file.</returns>
-        public bool CreateKeyFile(string data, string username)
+        public static bool CreateKeyFile(string data, string username)
 		{
             PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
             PassXYZ.Utils.Settings.User.Username = username;
 
-            if (data.StartsWith(PxDefs.PxKeyFile))
-			{
-				// Old key data
-                var msg = data.Substring(PxDefs.PxKeyFile.Length);
-                KeyData keyData = new OldKeyData(msg);
-
-                CreateKeyFile(keyData, username);
-            }
-            else if (data.StartsWith(PxDefs.PxJsonData))
+            if (data.IsJson())
 			{
                 // New key data
-                var msg = data.Substring(PxDefs.PxJsonData.Length);
-                KeyData keyData = new NewKeyData(msg);
+                KeyData keyData = new NewKeyData(data);
 
-				CreateKeyFile(keyData, username);
+                PxDatabase.CreateKeyFile(keyData, username);
+            }
+            else
+			{
+                // Old key data
+                KeyData keyData = new OldKeyData(data);
+
+                PxDatabase.CreateKeyFile(keyData, username);
             }
 
             return false;
 		}
 
-		private bool CreateKeyFile(KeyData keyData, string username)
+		private static bool CreateKeyFile(KeyData keyData, string username)
 		{
             if (keyData != null)
             {
