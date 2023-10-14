@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Maui.Storage;
+using Microsoft.Maui.ApplicationModel;
 
 using PassXYZLib.Resources;
 
@@ -160,82 +161,147 @@ namespace PassXYZLib
         #endregion    
     }
 
+    /// <summary>
+    /// PxCloudConfig implements cloud configuration for synchronization
+    /// </summary>
     public static class PxCloudConfig
     {
+        public const string DEFAULT_USERNAME = "pxtestuser";
+        public const string DEFAULT_PASSWORD = "pxtestpw";
+        public const string DEFAULT_HOSTNAME = "";
+        public const int DEFAULT_PORT = 22;
+        public const string DEFAULT_REMOTEHOMEPATH = "/pxhomepath";
         public static PxCloudType CurrentServiceType { get => PxCloudType.SFTP; }
 
-        public static string Username 
+        /// <summary>
+        /// Gets username from <c>Preference</c>.
+        /// </summary>
+        /// <value>
+        /// The username in <c>Preference</c> or the default value.
+        /// </value>
+        public static string Username
         {
             get 
             { 
-                return Preferences.Get(nameof(PxCloudConfig) + nameof(Username), "");
+                try { return Preferences.Get(nameof(PxCloudConfig) + nameof(Username), DEFAULT_USERNAME); }
+                catch (NotImplementedException) { return DEFAULT_USERNAME; }
             }
-            set 
+            set
             {
-                Preferences.Set(nameof(PxCloudConfig) + nameof(Username), value);
+                try { Preferences.Set(nameof(PxCloudConfig) + nameof(Username), value); }
+                catch (NotImplementedException) { Debug.WriteLine($"Set to {DEFAULT_USERNAME}"); }
             }
         }
+
+        /// <summary>
+        /// Gets password from <c>Preference</c>.
+        /// </summary>
+        /// <value>
+        /// The password in <c>Preference</c> or the default value.
+        /// </value>
         public static string Password 
         {
             get
             {
-                return Preferences.Get(nameof(PxCloudConfig) + nameof(Password), "");
+                try { return Preferences.Get(nameof(PxCloudConfig) + nameof(Password), DEFAULT_PASSWORD); }
+                catch (NotImplementedException) { return DEFAULT_PASSWORD; }
             }
             set
             {
-                Preferences.Set(nameof(PxCloudConfig) + nameof(Password), value);
+                try { Preferences.Set(nameof(PxCloudConfig) + nameof(Password), value); }
+                catch (NotImplementedException) { Debug.WriteLine($"Set to {DEFAULT_PASSWORD}"); }
             }
         }
+
+        private static string _hostname = DEFAULT_HOSTNAME;
+        /// <summary>
+        /// Gets hostname from <c>Preference</c>.
+        /// </summary>
+        /// <value>
+        /// The hostname in <c>Preference</c> or the default value.
+        /// </value>
         public static string Hostname 
         {
             get
             {
-                return Preferences.Get(nameof(PxCloudConfig) + nameof(Hostname), "");
+                try { return Preferences.Get(nameof(PxCloudConfig) + nameof(Hostname), DEFAULT_HOSTNAME); }
+                catch (NotImplementedException) { return _hostname; }
             }
-            set
+            set 
             {
-                Preferences.Set(nameof(PxCloudConfig) + nameof(Hostname), value);
+                try { Preferences.Set(nameof(PxCloudConfig) + nameof(Hostname), value); }
+                catch (NotImplementedException) { _hostname = value; }
             }
         }
+
         /// <summary>
-        /// Gets connection port.
+        /// Gets connection port from <c>Preference</c>.
         /// </summary>
         /// <value>
-        /// The connection port. The default value is 22.
+        /// The connection port from <c>Preference</c> or the default port.
         /// </value>
         public static int Port
         {
             get
             {
-                return Preferences.Get(nameof(PxCloudConfig) + nameof(Port), 22);
+                try { return Preferences.Get(nameof(PxCloudConfig) + nameof(Port), DEFAULT_PORT); }
+                catch (NotImplementedException) { return DEFAULT_PORT; }
             }
             set
             {
-                Preferences.Set(nameof(PxCloudConfig) + nameof(Port), value);
+                try { Preferences.Set(nameof(PxCloudConfig) + nameof(Port), value); }
+                catch (NotImplementedException) { Debug.WriteLine($"Set to {DEFAULT_PORT}"); }
             }
         }
+
+        /// <summary>
+        /// Gets remote home path from <c>Preference</c>.
+        /// </summary>
+        /// <value>
+        /// The remote home path from <c>Preference</c> or return the default value.
+        /// </value>
         public static string RemoteHomePath 
         {
             get
             {
-                return Preferences.Get(nameof(PxCloudConfig) + nameof(RemoteHomePath), "");
+                try { return Preferences.Get(nameof(PxCloudConfig) + nameof(RemoteHomePath), DEFAULT_REMOTEHOMEPATH); }
+                catch (NotImplementedException) { return DEFAULT_REMOTEHOMEPATH; }
             }
             set
             {
-                Preferences.Set(nameof(PxCloudConfig) + nameof(RemoteHomePath), value);
+                try { Preferences.Set(nameof(PxCloudConfig) + nameof(RemoteHomePath), value); }
+                catch (NotImplementedException) { Debug.WriteLine($"Set to {DEFAULT_REMOTEHOMEPATH}"); }
             }
         }
-        public static bool IsEnabled 
+
+        private static bool _isEnabled = false;
+        /// <summary>
+        /// Whether synchronization is enabled
+        /// </summary>
+        /// <value>
+        /// Gets the value from <c>Preference</c> or return the default value.
+        /// </value>
+        /// <remarks>
+        /// The <see cref="IsEnabled"/> is a <see langword="bool"/>
+        /// that you check whether the synchronization is enabled.
+        /// <para>
+        /// Note that <c>_isEnabled</c> is used when the implementation is not available.
+        /// </para>
+        /// </remarks>
+        public static bool IsEnabled
         {
             get
             {
-                return Preferences.Get(nameof(PxCloudConfig) + nameof(IsEnabled), false);
+                try { return Preferences.Get(nameof(PxCloudConfig) + nameof(IsEnabled), false); }
+                catch (NotImplementedException) { return _isEnabled; }
             }
             set
             {
-                Preferences.Set(nameof(PxCloudConfig) + nameof(IsEnabled), value);
+                try { Preferences.Set(nameof(PxCloudConfig) + nameof(IsEnabled), value); }
+                catch (NotImplementedException) { _isEnabled = value; }
             }
         }
+
         public static bool IsConfigured => !string.IsNullOrWhiteSpace(Username)
                     && !string.IsNullOrWhiteSpace(Password)
                     && !string.IsNullOrWhiteSpace(Hostname)

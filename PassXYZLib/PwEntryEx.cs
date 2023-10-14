@@ -134,6 +134,7 @@ namespace PassXYZLib
         /// </summary>
         /// <param name="entry">an instance of PwEntry</param>
         /// <param name="encodeKey">true - decode key, false - does not decode key</param>
+        /// <param name="GetImage">Function to get the image</param>
 		/// <returns>A list of fields</returns>
         public static List<Field> GetFields(this PwEntry entry, bool encodeKey = false, Func<string, Object> GetImage = null)
         {

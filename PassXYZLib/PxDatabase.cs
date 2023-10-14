@@ -421,6 +421,7 @@ namespace PassXYZLib
 		/// If the device lock is enabled, we need to set DefaultFolder first.
 		/// </summary>
 		/// <param name="user">an instance of PassXYZLib.User</param>
+		/// <param name="kp">key provider</param>
 		public void New(PassXYZLib.User user, PxKeyProvider kp = null)
 		{
 			if (user == null) { Debug.Assert(false); throw new ArgumentNullException("PassXYZLib.User"); }
