@@ -44,11 +44,27 @@ namespace PassXYZLib
             return _isConnected;
         }
 
+        public bool IsSshOperationTimeout { get; set; } = false;
+
+        private readonly object _sync = new object();
+        private bool _isBusyToLoadUsers = false;
+        public bool IsBusyToLoadUsers
+        {
+            get => _isBusyToLoadUsers;
+            set
+            {
+                lock (_sync)
+                {
+                    _isBusyToLoadUsers = value;
+                }
+            }
+        }
+
         private async Task<bool> ConnectAsync(Action<SftpClient> updateAction)
         {
-            if (!PxCloudConfig.IsConfigured || !PxCloudConfig.IsEnabled || PassXYZ.Vault.App.IsSshOperationTimeout)
+            if (!PxCloudConfig.IsConfigured || !PxCloudConfig.IsEnabled || IsSshOperationTimeout)
             {
-                Debug.WriteLine($"PxSFtp: ConnectAsync, Cloud storage is not configured or connect timeout {PassXYZ.Vault.App.IsSshOperationTimeout}.");
+                Debug.WriteLine($"PxSFtp: ConnectAsync, Cloud storage is not configured or connect timeout {IsSshOperationTimeout}.");
                 return false;
             }
 
@@ -82,7 +98,7 @@ namespace PassXYZLib
                     catch (SshOperationTimeoutException ex)
                     {
                         _isConnected = false;
-                        PassXYZ.Vault.App.IsSshOperationTimeout = true;
+                        IsSshOperationTimeout = true;
                         Debug.WriteLine($"PxSFtp: {ex}");
                     }
                     catch (SshAuthenticationException ex)
@@ -236,7 +252,7 @@ namespace PassXYZLib
         {
             IEnumerable<PxUser> pxUsers = null;
 
-            if (!PxCloudConfig.IsConfigured || !PxCloudConfig.IsEnabled || PassXYZ.Vault.App.IsBusyToLoadUsers)
+            if (!PxCloudConfig.IsConfigured || !PxCloudConfig.IsEnabled || IsBusyToLoadUsers)
             {
                 Debug.WriteLine("PxSFtp: SynchronizeUsersAsync, cloud storage is not configured or IsBusy");
                 return pxUsers;
@@ -250,23 +266,23 @@ namespace PassXYZLib
                 {
                     Debug.WriteLine("PxSFtp: cannot retrieve remote users");
                     // Since there is no remote users, we return local users only.
-                    pxUsers = await PxUser.LoadLocalUsersAsync();
+                    pxUsers = await PxUser.LoadLocalUsersAsync(IsBusyToLoadUsers);
                     foreach (PxUser localOnlyUser in pxUsers)
                     {
                         localOnlyUser.SyncStatus = PxCloudSyncStatus.PxLocal;
                     }
                     _isSynchronized = true;
-                    PassXYZ.Vault.App.IsBusyToLoadUsers = false;
+                    IsBusyToLoadUsers = false;
                     return;
                 }
 
                 // await PxUser.RemoveTempFilesAsync();
-                IEnumerable<PxUser> localUsers = await PxUser.LoadLocalUsersAsync();
+                IEnumerable<PxUser> localUsers = await PxUser.LoadLocalUsersAsync(IsBusyToLoadUsers);
                 IEnumerable<PxUser> localOnyUsers = localUsers.Except(remoteUsers, new PxUserComparer());
                 IEnumerable<PxUser> remoteOnyUsers = remoteUsers.Except(localUsers, new PxUserComparer());
                 IEnumerable<PxUser> syncedUsers = localUsers.Intersect(remoteUsers, new PxUserComparer());
 
-                PassXYZ.Vault.App.IsBusyToLoadUsers = true;
+                IsBusyToLoadUsers = true;
 
                 foreach (PxUser localOnlyUser in localOnyUsers)
                 {
@@ -337,7 +353,7 @@ namespace PassXYZLib
                 }
                 pxUsers = localUsers;
                 _isSynchronized = true;
-                PassXYZ.Vault.App.IsBusyToLoadUsers = false;
+                IsBusyToLoadUsers = false;
             });
 
             Debug.WriteLine("PxSFtp: SynchronizeUsersAsync done");

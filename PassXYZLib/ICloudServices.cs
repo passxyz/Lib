@@ -4,6 +4,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.Maui.Storage;
+
+using PassXYZLib.Resources;
 
 namespace PassXYZLib
 {
@@ -109,7 +112,7 @@ namespace PassXYZLib
                 OnPropertyChanged("IsEnabled");
             }
         }
-        private string _configMessage = AppResources.message_id_cloud_config;
+        private string _configMessage = PxRes.message_id_cloud_config;
         public string ConfigMessage 
         {
             get => _configMessage;
@@ -322,6 +325,8 @@ namespace PassXYZLib
         Task<IEnumerable<T>> SynchronizeUsersAsync();
         void Logout();
         bool IsSynchronized { get; }
+        bool IsSshOperationTimeout { get; set; }
+        bool IsBusyToLoadUsers { get; set; }
     }
 #endif // PASSXYZ_CLOUD_SERVICE
 }
