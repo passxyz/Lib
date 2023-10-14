@@ -2,3 +2,6 @@
 	path = PureOtp
 	url = https://github.com/shugaoye/PureOtp.git
 	branch = passxyz
+[submodule "Documentation"]
+	path = Documentation
+	url = git-sz:/repo/shugaoye/PassXYZLibDoc.git
