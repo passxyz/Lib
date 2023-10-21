@@ -170,7 +170,7 @@ namespace PassXYZLib
         public const string DEFAULT_PASSWORD = "pxtestpw";
         public const string DEFAULT_HOSTNAME = "";
         public const int DEFAULT_PORT = 22;
-        public const string DEFAULT_REMOTEHOMEPATH = "/pxhomepath";
+        public const string DEFAULT_REMOTEHOMEPATH = "data/";
         public static PxCloudType CurrentServiceType { get => PxCloudType.SFTP; }
 
         /// <summary>
@@ -383,13 +383,13 @@ namespace PassXYZLib
     public interface ICloudServices<T>
     {
         Task LoginAsync();
-        bool IsConnected();
         Task<string> DownloadFileAsync(string filename, bool isMerge = false);
         Task UploadFileAsync(string filename);
         Task<bool> DeleteFileAsync(string filename);
         Task<IEnumerable<T>> LoadRemoteUsersAsync();
         Task<IEnumerable<T>> SynchronizeUsersAsync();
         void Logout();
+        bool IsConnected { get; }
         bool IsSynchronized { get; }
         bool IsSshOperationTimeout { get; set; }
         bool IsBusyToLoadUsers { get; set; }
