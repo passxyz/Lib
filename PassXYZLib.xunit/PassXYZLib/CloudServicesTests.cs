@@ -111,5 +111,12 @@ namespace PassXYZLib.xunit.PassXYZLib
                 Debug.WriteLine("Cannot connect, please check environment setup.");
             }
         }
+
+        [Fact]
+        public void TestFileSynchronizationService() 
+        {
+            var service = new FileSynchronizationService(PxCloudConfig.Hostname, PxCloudConfig.Username, PxCloudConfig.Password, PxCloudConfig.Port);
+            service.SynchronizeFiles(PxDataFile.DataFilePath, PxCloudConfig.RemoteHomePath);
+        }
     }
 }

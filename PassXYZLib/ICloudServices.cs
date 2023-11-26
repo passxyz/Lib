@@ -388,6 +388,7 @@ namespace PassXYZLib
         Task<bool> DeleteFileAsync(string filename);
         Task<IEnumerable<T>> LoadRemoteUsersAsync();
         Task<IEnumerable<T>> SynchronizeUsersAsync();
+        Task<IEnumerable<PxUser>> SynchronizeAsync();
         void Logout();
         bool IsConnected { get; }
         bool IsSynchronized { get; }

@@ -193,7 +193,7 @@ namespace PassXYZLib
 
         public async Task<IEnumerable<PxUser>> LoadRemoteUsersAsync()
         {
-            List<PxUser> remoteUsers = new List<PxUser>();
+            List<PxRemoteUser> remoteUsers = new List<PxRemoteUser>();
 
             await ConnectAsync((SftpClient sftp) => {
                 try 
@@ -203,7 +203,7 @@ namespace PassXYZLib
                         if (Path.GetExtension(remoteFile.FullName) == ".xyz")
                         {
                             // If it is a PassXYZ data file, then we add it to the list.
-                            PxUser pxUser = new PxUser(Path.GetFileName(remoteFile.FullName))
+                            PxRemoteUser pxUser = new PxRemoteUser(Path.GetFileName(remoteFile.FullName))
                             {
                                 SyncStatus = PxCloudSyncStatus.PxCloud,
                             };
@@ -251,6 +251,118 @@ namespace PassXYZLib
                          where cust.Username == username
                          select cust;
             return pxUser.First();
+        }
+
+        /// <summary>
+        /// Synchronize users
+        /// </summary>
+		/// <returns>A list of synchronized users.</returns>
+        public async Task<IEnumerable<PxUser>> SynchronizeAsync() 
+        {
+            IEnumerable<PxUser> pxUsers = null;
+
+            if (!PxCloudConfig.IsConfigured || !PxCloudConfig.IsEnabled || IsBusyToLoadUsers)
+            {
+                Debug.WriteLine("PxSFtp: SynchronizeUsersAsync, cloud storage is not configured or IsBusy");
+                return pxUsers;
+            }
+
+            await Task.Run(async () =>
+            {
+                IEnumerable<PxUser> remoteUsers = await LoadRemoteUsersAsync();
+
+                if (remoteUsers.Count() == 0)
+                {
+                    Debug.WriteLine("PxSFtp: cannot retrieve remote users");
+                    // Since there is no remote users, we return local users only.
+                    pxUsers = await PxUser.LoadLocalUsersAsync(IsBusyToLoadUsers);
+                    foreach (PxUser localOnlyUser in pxUsers)
+                    {
+                        localOnlyUser.SyncStatus = PxCloudSyncStatus.PxLocal;
+                    }
+                    _isSynchronized = true;
+                    IsBusyToLoadUsers = false;
+                    return;
+                }
+
+                IEnumerable<PxUser> localUsers = await PxUser.LoadLocalUsersAsync(IsBusyToLoadUsers);
+                IEnumerable<PxUser> localOnlyUsers = localUsers.Except(remoteUsers, new PxUserComparer());
+                IEnumerable<PxUser> remoteOnlyUsers = remoteUsers.Except(localUsers, new PxUserComparer());
+                IEnumerable<PxUser> syncedUsers = localUsers.Intersect(remoteUsers, new PxUserComparer());
+
+                IsBusyToLoadUsers = true;
+
+                foreach (PxUser localOnlyUser in localOnlyUsers)
+                {
+                    await UploadFileAsync(localOnlyUser.FileName);
+                    localOnlyUser.RemoteFileStatus.Length = localOnlyUser.CurrentFileStatus.Length;
+                    localOnlyUser.RemoteFileStatus.LastWriteTime = localOnlyUser.CurrentFileStatus.LastWriteTime;
+                    localOnlyUser.SyncStatus = PxCloudSyncStatus.PxSynced;
+                    Debug.WriteLine($"PxSFtp: SynchronizeUsersAsync updated local Username={localOnlyUser.Username}, FileName={localOnlyUser.FileName}");
+                }
+                foreach (PxUser remoteOnlyUser in remoteOnlyUsers)
+                {
+                    // Need to download remote users to local
+                    await DownloadFileAsync(remoteOnlyUser.FileName, false);
+                    remoteOnlyUser.SyncStatus = PxCloudSyncStatus.PxSynced;
+                    Debug.WriteLine($"PxSFtp: SynchronizeUsersAsync downloaded Username={remoteOnlyUser.Username}, FileName={remoteOnlyUser.FileName}");
+                }
+                foreach (PxUser syncedUser in syncedUsers)
+                {
+                    // Need to sychronize users
+                    // Case 1: Local file is newer than remote file, upload local file to overwrite the remote one
+                    bool isMerge = syncedUser.CurrentFileStatus.IsModified;
+                    PxUser rUser = GetUserByUsername(remoteUsers, syncedUser.Username);
+                    syncedUser.RemoteFileStatus = rUser.RemoteFileStatus;
+                    if ((syncedUser.CurrentFileStatus.Length != rUser.RemoteFileStatus.Length) || isMerge)
+                    {
+                        if (!rUser.LocalFileStatus.IsModified)
+                        {
+                            // Case 2: If remote file is not changed, upload local file
+                            await UploadFileAsync(syncedUser.FileName);
+                            syncedUser.SyncStatus = PxCloudSyncStatus.PxSynced;
+                            Debug.WriteLine($"PxSFtp: SynchronizeUsersAsync: updated remote file, Username={syncedUser.Username}, FileName={syncedUser.FileName}");
+                        }
+                        else
+                        {
+                            // Case 3: Both remote file and local file changed
+
+                            if (isMerge)
+                            {
+                                // Local file is changed so we may have a conflict here. Download remote file to a temp folder
+                                isMerge = true;
+                                syncedUser.SyncStatus = PxCloudSyncStatus.PxSyncing;
+                                Debug.WriteLine($"PxSFtp: SynchronizeUsersAsync conflict found Username={syncedUser.Username}, FileName={syncedUser.FileName}");
+                            }
+                            else
+                            {
+                                // Local file is not modified, we download remote file
+                                isMerge = false;
+                                syncedUser.SyncStatus = PxCloudSyncStatus.PxSynced;
+                                Debug.WriteLine($"PxSFtp: SynchronizeUsersAsync: updated local file, Username={syncedUser.Username}, FileName={syncedUser.FileName}");
+                            }
+                            await DownloadFileAsync(syncedUser.FileName, isMerge);
+                        }
+                    }
+                    else
+                    {
+                        syncedUser.SyncStatus = PxCloudSyncStatus.PxSynced;
+                    }
+                }
+
+                // Add remote only users to the list
+                if (remoteOnlyUsers.Count() > 0)
+                {
+                    localUsers.Concat(remoteOnlyUsers);
+                }
+                pxUsers = localUsers;
+                _isSynchronized = true;
+                IsBusyToLoadUsers = false;
+            });
+
+            Debug.WriteLine("PxSFtp: SynchronizeUsersAsync done");
+
+            return pxUsers;
         }
 
         public async Task<IEnumerable<PxUser>> SynchronizeUsersAsync()
