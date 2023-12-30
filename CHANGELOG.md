@@ -1,5 +1,11 @@
 ## Change log
 
+### 2.2.1
+- Updated PassXYZ to 3.2.0
+
+### 2.2.0
+- Enabled PASSXYZ_CLOUD_SERVICE
+
 ### 2.0.2
 - Built for .NET MAUI GA release
 

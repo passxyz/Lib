@@ -46,7 +46,7 @@ namespace PassXYZLib.xunit.PassXYZLib
         public void TestSetHostname()
         {
             PxCloudConfig.Hostname = "newHostname";
-            Assert.Equal(PxCloudConfig.DEFAULT_HOSTNAME, PxCloudConfig.Hostname);
+            Assert.Equal("newHostname", PxCloudConfig.Hostname);
         }
         [Fact]
         public void TestDefaultPort()
