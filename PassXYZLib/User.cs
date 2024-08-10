@@ -44,7 +44,7 @@ namespace PassXYZLib
                 }
                 else
                 {
-                    string path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "data");
+                    string path = System.IO.Path.Combine(PxEnvironment.GetRoot(), "data");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -72,7 +72,7 @@ namespace PassXYZLib
                 }
                 else
                 {
-                    string path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "key");
+                    string path = System.IO.Path.Combine(PxEnvironment.GetRoot(), "key");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
