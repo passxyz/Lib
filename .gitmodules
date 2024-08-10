@@ -4,4 +4,4 @@
 	branch = passxyz
 [submodule "Documentation"]
 	path = Documentation
-	url = git-sz:/repo/shugaoye/PassXYZLibDoc.git
+	url = https://github.com/shugaoye/PassXYZLibDoc.git
