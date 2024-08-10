@@ -1,5 +1,8 @@
 ## Change log
 
+### 2.2.2Alpha
+- Updated to .NET 8
+
 ### 2.2.1
 - Updated PassXYZ to 3.2.0
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Version>2.0.0</Version>
 
@@ -44,6 +44,8 @@
       <DataFiles Include="$(ProjectDir)\pass_d_E8f4pEk.xyz" />
       <DataFiles Include="$(ProjectDir)\pass_e_JyHzpRxcopt.xyz" />
       <DataFiles Include="$(ProjectDir)\pass_k_JyHzpRxcopt.k4xyz" />
+      <DataFiles Include="$(ProjectDir)\pass_e_2TjEf1Dy9V2jiEgbS.xyz" />
+      <DataFiles Include="$(ProjectDir)\pass_k_2TjEf1Dy9V2jiEgbS.k4xyz" />
       <DataFiles Include="$(ProjectDir)\pass_e_EFZGmRz.xyz" />
       <DataFiles Include="$(ProjectDir)\pass_k_EFZGmRz.k4xyz" />
     </ItemGroup>

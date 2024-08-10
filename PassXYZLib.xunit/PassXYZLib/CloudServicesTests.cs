@@ -112,7 +112,7 @@ namespace PassXYZLib.xunit.PassXYZLib
             }
         }
 
-        [Fact]
+        [Fact (Skip = "Need to setup a test server")]
         public void TestFileSynchronizationService() 
         {
             var service = new FileSynchronizationService(PxCloudConfig.Hostname, PxCloudConfig.Username, PxCloudConfig.Password, PxCloudConfig.Port);
