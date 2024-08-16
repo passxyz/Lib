@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using PassXYZLib;
 using UITest.Models;
 using UITest.Services;
 
@@ -22,6 +23,7 @@ namespace UITest.ViewModels
             Title = "Storage Tests";
             Items = [];
             IsBusy = false;
+            LogData = PxEnvironment.GetRoot();
         }
 
         [ObservableProperty]
@@ -32,6 +34,9 @@ namespace UITest.ViewModels
 
         [ObservableProperty]
         private bool isBusy;
+
+        [ObservableProperty]
+        private string logData;
 
         public override void OnItemSelecteion(object sender)
         {
@@ -86,22 +91,58 @@ namespace UITest.ViewModels
             SelectedItem = null;
         }
 
-        [TestCase(Skip = "Skip this test method 1")]
-        public void Test_Method1()
+        private static string GetRootGroupName(User user)
         {
-            Debug.WriteLine("Test_Method1");
+            PxDatabase db = new PxDatabase();
+            if (db != null)
+            {
+                db.Open(user);
+                if (db.RootGroup != null)
+                    return $"{db.RootGroup.Name}";
+            }
+            return $"Cannot open database {user.Username}.";
+        }
+
+        private static string Users()
+        {
+            string userList = "";
+            User.GetUsersList().ForEach(u => {
+                User user = new User();
+                user.Username = u;
+                userList = userList + $"<b>{u}</b>: {user.Path}" + "\n";
+            });
+            return userList;
         }
 
         [TestCase]
-        public void Test_Method2()
+        public void Get_User_List()
         {
-            Debug.WriteLine("Test_Method2");
+            Debug.WriteLine("Get_User_List");
+            LogData = Users();
         }
 
         [TestCase]
-        public void Test_Method3()
+        public void Get_Root_Group_Name()
         {
-            Debug.WriteLine("Test_Method3");
+            Debug.WriteLine("Get_Root_Group_Name");
+            User user = new()
+            {
+                Username = "test1",
+                Password = "12345"
+            };
+            LogData = $"<b>Root Group (no keylock)</b>: {GetRootGroupName(user)}";
+        }
+
+        [TestCase]
+        public void Get_Root_Group_Name_MixedKeyData()
+        {
+            Debug.WriteLine("Get_Root_Group_Name_MixedKeyData");
+            User user = new()
+            {
+                Username = "MixedKeyData",
+                Password = "123123"
+            };
+            LogData = $"<b>Root Group (MixedKey)</b>: {GetRootGroupName(user)}";
         }
     }
 }

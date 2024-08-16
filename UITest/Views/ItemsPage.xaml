@@ -25,8 +25,10 @@
                 <ListView.Footer>
                     <StackLayout BackgroundColor="LightGray">
                         <Label x:Name="logData" Margin="10,0,0,0"
-                           Text="Data log"
-                           FontSize="11" />
+                           Text="{Binding LogData}"
+                           TextType="Html"
+                           HorizontalOptions="Start"
+                           FontSize="Micro" />
                     </StackLayout>
                 </ListView.Footer>
             </ListView>

@@ -1,9 +1,4 @@
-﻿using PassXYZLib;
-using Renci.SshNet.Messages;
-using System.Diagnostics;
-using UITest.Models;
-using UITest.ViewModels;
-using UITest.Views;
+﻿using UITest.ViewModels;
 
 namespace UITest.Views
 {
@@ -16,7 +11,6 @@ namespace UITest.Views
             InitializeComponent();
 
             BindingContext = this.viewModel = viewModel;
-            logData.Text = PxEnvironment.GetRoot();
         }
 
         protected override void OnAppearing()
