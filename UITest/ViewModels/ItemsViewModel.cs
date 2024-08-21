@@ -6,6 +6,9 @@ using System.Diagnostics;
 using PassXYZLib;
 using UITest.Models;
 using UITest.Services;
+using PassXYZ.Models;
+using User = PassXYZLib.User;
+using System.Text;
 
 namespace UITest.ViewModels
 {
@@ -143,6 +146,42 @@ namespace UITest.ViewModels
                 Password = "123123"
             };
             LogData = $"<b>Root Group (MixedKey)</b>: {GetRootGroupName(user)}";
+        }
+
+        public static string StreamToString(Stream stream)
+        {
+            stream.Position = 0;
+            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        [TestCase]
+        public async void FilePicker_Read_Test()
+        {
+            var customFileType = new FilePickerFileType(
+                new Dictionary<DevicePlatform, IEnumerable<string>>
+                {
+                    { DevicePlatform.iOS, new[] { "public.com.passxyz" } }, // UTType values
+                    { DevicePlatform.Android, new[] { "text/plain" } }, // MIME type
+                    { DevicePlatform.WinUI, new[] { ".txt", ".md" } }, // file extension
+                    { DevicePlatform.macOS, new[] { "txt", "md" } }, // UTType values
+                });
+
+            Debug.WriteLine("FilePicker_Read_Test");
+            var result = await FilePicker.PickAsync(new PickOptions
+            {
+                PickerTitle = "Please pick a text file",
+                FileTypes = customFileType
+            });
+
+            if (result == null)
+                return;
+
+            using var stream = await result.OpenReadAsync();
+            string text = StreamToString(stream);
+            LogData = $"<b>FilePicker_Read_Test</b>: {text}";
         }
     }
 }
