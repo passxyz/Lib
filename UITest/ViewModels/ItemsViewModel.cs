@@ -68,10 +68,10 @@ namespace UITest.ViewModels
                 {
                     StorageTestMethod item = new()
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        //Id = Guid.NewGuid().ToString(),
                         Name = methodInfo.Name,
                         Info = methodInfo,
-                        Description = $"Testing {methodInfo.Name}",
+                        Notes = $"Testing {methodInfo.Name}",
                         Value = this
                     };
                     Items.Add(item);
@@ -187,10 +187,38 @@ namespace UITest.ViewModels
         [TestCase]
         public async void Test_QrCodePage()
         {
-            var text = "Test_QrCodePage";
-            QrCodePage qrCodePage = new QrCodePage("http://www.bing.com", text);
-            await Shell.Current.Navigation.PushModalAsync(qrCodePage);
-            LogData = $"<b>Test_QrCodePage</b>: {text}";
+            LogData = $"<b>Test_QrCodePage</b>: Test_QrCodePage";
+            //User user = new()
+            //{
+            //    Username = "test1",
+            //    Password = "12345"
+            //};
+            //PxDatabase db = new PxDatabase();
+            //if (db != null)
+            //{
+            //    db.Open(user);
+            //    if (db.RootGroup != null) 
+            //    {
+            //        KPCLib.Item item = db.RootGroup.Items[1];
+            //        PxPlainFields plainFields = item.GetPlainFields();
+            //        string data = plainFields.ToString();
+            //        if (data.Length < PassXYZLib.PxDefs.QR_CODE_MAX_LEN)
+            //        {
+            //            Debug.WriteLine($"ItemsPage: sharing {data}");
+            //            QrCodePage qrCodePage = new QrCodePage(data, item.Name);
+            //            LogData = LogData + item.Name;
+            //            await Shell.Current.Navigation.PushModalAsync(new NavigationPage(qrCodePage));
+            //        }
+            //        else
+            //        {
+            //            Debug.WriteLine($"ItemsPage: cannot sharing {item.Name}, it is too large");
+            //        }
+
+            //    }
+            //}
+
+            QrCodePage qrCodePage = new QrCodePage("https://www.bing.com", "Test_QrCodePage");
+            await Shell.Current.Navigation.PushModalAsync(new NavigationPage(qrCodePage));
         }
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZXing.Net.Maui;
-using ZXing.Net.Maui.Controls;
+using Camera.MAUI;
+using Camera.MAUI.ZXing;
 
 namespace UITest.Views
 {
@@ -17,15 +17,18 @@ namespace UITest.Views
                 Spacing = 10,
                 Padding = new Thickness(10, 20, 0, 0)
             };
-            BarcodeGeneratorView barcode = new BarcodeGeneratorView
+            BarcodeImage barcode = new BarcodeImage
             {
+                Aspect = Aspect.AspectFit,
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
                 HeightRequest = 300,
                 WidthRequest = 300,
+                BarcodeMargin = 5,
+                BarcodeFormat = BarcodeFormat.QR_CODE
             };
-            barcode.Format = BarcodeFormat.QrCode;
-            barcode.Value = msg;
+            barcode.BarcodeEncoder = new ZXingBarcodeEncoder();
+            barcode.Barcode = msg;
 
             var qrcodeTitle = new Label()
             {

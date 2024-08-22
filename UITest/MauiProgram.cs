@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using ZXing.Net.Maui;
-using UITest.Models;
-using UITest.Services;
 using UITest.ViewModels;
 using UITest.Views;
-using ZXing.Net.Maui.Controls;
+using Camera.MAUI;
 
 namespace UITest
 {
@@ -15,7 +12,7 @@ namespace UITest
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .UseBarcodeReader()
+                .UseMauiCameraView()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("fa-regular-400.ttf", "FontAwesomeRegular");
