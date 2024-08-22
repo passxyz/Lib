@@ -6,9 +6,9 @@ using System.Diagnostics;
 using PassXYZLib;
 using UITest.Models;
 using UITest.Services;
-using PassXYZ.Models;
 using User = PassXYZLib.User;
 using System.Text;
+using UITest.Views;
 
 namespace UITest.ViewModels
 {
@@ -182,6 +182,15 @@ namespace UITest.ViewModels
             using var stream = await result.OpenReadAsync();
             string text = StreamToString(stream);
             LogData = $"<b>FilePicker_Read_Test</b>: {text}";
+        }
+
+        [TestCase]
+        public async void Test_QrCodePage()
+        {
+            var text = "Test_QrCodePage";
+            QrCodePage qrCodePage = new QrCodePage("http://www.bing.com", text);
+            await Shell.Current.Navigation.PushModalAsync(qrCodePage);
+            LogData = $"<b>Test_QrCodePage</b>: {text}";
         }
     }
 }
