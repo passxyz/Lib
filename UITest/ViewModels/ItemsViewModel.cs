@@ -6,6 +6,9 @@ using System.Diagnostics;
 using PassXYZLib;
 using UITest.Models;
 using UITest.Services;
+using User = PassXYZLib.User;
+using System.Text;
+using UITest.Views;
 
 namespace UITest.ViewModels
 {
@@ -65,10 +68,10 @@ namespace UITest.ViewModels
                 {
                     StorageTestMethod item = new()
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        //Id = Guid.NewGuid().ToString(),
                         Name = methodInfo.Name,
                         Info = methodInfo,
-                        Description = $"Testing {methodInfo.Name}",
+                        Notes = $"Testing {methodInfo.Name}",
                         Value = this
                     };
                     Items.Add(item);
@@ -143,6 +146,79 @@ namespace UITest.ViewModels
                 Password = "123123"
             };
             LogData = $"<b>Root Group (MixedKey)</b>: {GetRootGroupName(user)}";
+        }
+
+        public static string StreamToString(Stream stream)
+        {
+            stream.Position = 0;
+            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        [TestCase]
+        public async void FilePicker_Read_Test()
+        {
+            var customFileType = new FilePickerFileType(
+                new Dictionary<DevicePlatform, IEnumerable<string>>
+                {
+                    { DevicePlatform.iOS, new[] { "public.com.passxyz" } }, // UTType values
+                    { DevicePlatform.Android, new[] { "text/plain" } }, // MIME type
+                    { DevicePlatform.WinUI, new[] { ".txt", ".md" } }, // file extension
+                    { DevicePlatform.macOS, new[] { "txt", "md" } }, // UTType values
+                });
+
+            Debug.WriteLine("FilePicker_Read_Test");
+            var result = await FilePicker.PickAsync(new PickOptions
+            {
+                PickerTitle = "Please pick a text file",
+                FileTypes = customFileType
+            });
+
+            if (result == null)
+                return;
+
+            using var stream = await result.OpenReadAsync();
+            string text = StreamToString(stream);
+            LogData = $"<b>FilePicker_Read_Test</b>: {text}";
+        }
+
+        [TestCase]
+        public async void Test_QrCodePage()
+        {
+            LogData = $"<b>Test_QrCodePage</b>: Test_QrCodePage";
+            //User user = new()
+            //{
+            //    Username = "test1",
+            //    Password = "12345"
+            //};
+            //PxDatabase db = new PxDatabase();
+            //if (db != null)
+            //{
+            //    db.Open(user);
+            //    if (db.RootGroup != null) 
+            //    {
+            //        KPCLib.Item item = db.RootGroup.Items[1];
+            //        PxPlainFields plainFields = item.GetPlainFields();
+            //        string data = plainFields.ToString();
+            //        if (data.Length < PassXYZLib.PxDefs.QR_CODE_MAX_LEN)
+            //        {
+            //            Debug.WriteLine($"ItemsPage: sharing {data}");
+            //            QrCodePage qrCodePage = new QrCodePage(data, item.Name);
+            //            LogData = LogData + item.Name;
+            //            await Shell.Current.Navigation.PushModalAsync(new NavigationPage(qrCodePage));
+            //        }
+            //        else
+            //        {
+            //            Debug.WriteLine($"ItemsPage: cannot sharing {item.Name}, it is too large");
+            //        }
+
+            //    }
+            //}
+
+            QrCodePage qrCodePage = new QrCodePage("https://www.bing.com", "Test_QrCodePage");
+            await Shell.Current.Navigation.PushModalAsync(new NavigationPage(qrCodePage));
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using UITest.Models;
-using UITest.Services;
 using UITest.ViewModels;
 using UITest.Views;
+using Camera.MAUI;
 
 namespace UITest
 {
@@ -13,6 +12,7 @@ namespace UITest
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCameraView()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("fa-regular-400.ttf", "FontAwesomeRegular");
