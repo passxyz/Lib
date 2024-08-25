@@ -880,11 +880,11 @@ namespace PassXYZLib
 		/// </summary>
 		/// <param name="name">The property name. Must not be <c>null</c>.</param>	
 		/// <returns>a list of entries</returns>
-		public IEnumerable<PwEntry> GetEntryListByProperty(string name)
+		public IEnumerable<PxEntry> GetEntryListByProperty(string name)
 		{
 			if (name == null) { Debug.Assert(false); throw new ArgumentNullException("name"); }
 
-			List<PwEntry> resultsList = new List<PwEntry>();
+			List<PxEntry> resultsList = new();
 
 			LinkedList<PwGroup> flatGroupList = RootGroup.GetFlatGroupList();
 
@@ -894,7 +894,7 @@ namespace PassXYZLib
 				{
 					if (!string.IsNullOrWhiteSpace(entry.CustomData.Get(name)))
 					{
-						resultsList.Add(entry);
+						resultsList.Add(new PxEntry(entry));
 					}
 				}
 			}
@@ -905,7 +905,7 @@ namespace PassXYZLib
 				{
 					if (!string.IsNullOrWhiteSpace(entry.CustomData.Get(name)))
 					{
-						resultsList.Add(entry);
+						resultsList.Add(new PxEntry(entry));
 					}
 				}
 			}
@@ -916,7 +916,7 @@ namespace PassXYZLib
 		/// Retrieve a list of entries with OTP
 		/// </summary>
 		/// <returns>a list of entries with OTP Url</returns>
-		public IEnumerable<PwEntry> GetOtpEntryList()
+		public IEnumerable<PxEntry> GetOtpEntryList()
 		{
 			return GetEntryListByProperty(PxDefs.PxCustomDataOtpUrl);
 		}
