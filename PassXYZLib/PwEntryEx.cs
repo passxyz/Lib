@@ -7,6 +7,7 @@ using Microsoft.Maui.Controls;
 using KPCLib;
 using KeePassLib;
 using KeePassLib.Security;
+using System.Diagnostics;
 
 namespace PassXYZLib
 {
@@ -224,6 +225,13 @@ namespace PassXYZLib
                 }
             }
             return string.Empty;
+        }
+
+        public static void SetOtpUrl(this PwEntry entry, string url)
+        {
+            if (url == null) { Debug.Assert(false); throw new ArgumentNullException("url"); }
+
+            entry.CustomData.Set(PassXYZLib.PxDefs.PxCustomDataOtpUrl, url);
         }
 
     }
