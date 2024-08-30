@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Storage;
 
 using PassXYZLib.Resources;
@@ -291,7 +292,8 @@ namespace PassXYZLib
         public ImageSource ImgSource => new FontImageSource
         {
             FontFamily = "FontAwesomeSolid",
-            Glyph = IsDeviceLockEnabled ? FontAwesomeSolid.UserLock : FontAwesomeSolid.User
+            Glyph = IsDeviceLockEnabled ? FontAwesomeSolid.UserLock : FontAwesomeSolid.User,
+            Color = Color.FromRgba(0, 0, 0, 0.75)
         };
 
         private string _syncStatusIconPath = System.IO.Path.Combine(PxDataFile.IconFilePath, "ic_passxyz_disabled.png");
@@ -311,7 +313,7 @@ namespace PassXYZLib
         /// <summary>
         /// Load local users
         /// </summary>
-        public static async Task<IEnumerable<PxUser>?> LoadLocalUsersAsync(bool isBusyToLoadUsers)
+        public static async Task<IEnumerable<PxUser>?> LoadLocalUsersAsync(bool isBusyToLoadUsers = false)
         {
             if (isBusyToLoadUsers)
             {
