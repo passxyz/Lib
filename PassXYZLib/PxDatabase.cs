@@ -462,13 +462,14 @@ namespace PassXYZLib
 			RootGroup.Name = user.Username;
 		}
 
-		/// <summary>
-		/// Create a key file from an PxKeyProvider instance or from the system
-		/// </summary>
-		/// <param name="kp">a key provider instance. If it is null, the key file is created from the 
-		/// current system.</param>
-		/// <returns>true - created key file, false - failed to create key file.</returns>
-		private bool CreateKeyFile(PassXYZLib.User user, PxKeyProvider kp = null)
+        /// <summary>
+        /// Create a key file from an PxKeyProvider instance or from the system
+        /// </summary>
+        /// <param name="user"> new user
+        /// <param name="kp">a key provider instance. If it is null, the key file is created from the 
+        /// current system.</param>
+        /// <returns>true - created key file, false - failed to create key file.</returns>
+        private bool CreateKeyFile(PassXYZLib.User user, PxKeyProvider kp = null)
 		{
 			PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
 			PassXYZ.Utils.Settings.User.Username = user.Username;
@@ -506,13 +507,14 @@ namespace PassXYZLib
                 PxDatabase.CreateKeyFile(keyData, username);
             }
 
-            return false;
+            return true;
 		}
 
 		private static bool CreateKeyFile(KeyData keyData, string username)
 		{
             if (keyData != null)
             {
+				Debug.WriteLine($"CreateKeyFile with Id={keyData.Id}");
                 PxKeyProvider pxKeyProvider = new(keyData);
                 if (pxKeyProvider.IsValidUser(username))
                 {
