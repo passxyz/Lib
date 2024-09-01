@@ -5,7 +5,7 @@
     {
         public static partial string GetRoot()
         {
-            return "/storage/emulated/0/Documents";
+            return "/sdcard/Documents";
         }
     }
 }
