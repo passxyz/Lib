@@ -325,6 +325,7 @@ namespace PassXYZLib
 
             return await Task.Run(() => {
                 var dataFiles = Directory.EnumerateFiles(PxDataFile.DataFilePath, PxDefs.all_xyz);
+                Debug.WriteLine($"Found {dataFiles.Count()} files.");
                 foreach (string currentFile in dataFiles)
                 {
                     string fileName = System.IO.Path.GetFileName(currentFile);

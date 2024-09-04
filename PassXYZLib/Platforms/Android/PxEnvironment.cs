@@ -5,7 +5,8 @@
     {
         public static partial string GetRoot()
         {
-            return "/sdcard/Documents";
+            //return "/sdcard/Documents";
+            return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         }
     }
 }
