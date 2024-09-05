@@ -56,7 +56,7 @@ namespace PassXYZLib.xunit.PassXYZ
             }
         }
 
-        [Fact]
+        [Fact(Skip = "This test can only work in .NET 7 or below")]
         public void IsOpenDbTest()
         {
             Connect();
@@ -64,7 +64,7 @@ namespace PassXYZLib.xunit.PassXYZ
             Assert.True((_db.IsOpen));
         }
 
-        [Fact]
+        [Fact(Skip = "This test can only work in .NET 7 or below")]
         public void GetDeviceLockDataTest()
         {
             Connect();

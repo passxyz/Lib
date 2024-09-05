@@ -158,7 +158,6 @@ namespace PassXYZLib
         /// either PxFileType.PxDataEx or PxFileType.PxData
         /// </summary>
         /// <param name="fileName">File name used to decode username</param>
-        /// <param name="fileType">File type</param>
         /// <returns>decoded username</returns>
         public static string GetUserNameFromDataFile(string fileName)
         {

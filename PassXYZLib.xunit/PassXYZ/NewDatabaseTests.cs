@@ -2,6 +2,7 @@
 using PassXYZ.Utils;
 using System.Diagnostics;
 using PassXYZ.Services;
+using PassXYZLib;
 
 namespace PassXYZLib.xunit.PassXYZ
 {
