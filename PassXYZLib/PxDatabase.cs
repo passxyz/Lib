@@ -242,7 +242,9 @@ namespace PassXYZLib
 			{ 
 				m_DefaultFolder = value;
 				PassXYZ.Utils.Settings.DefaultFolder = m_DefaultFolder;
-			}
+                PxDataFile.DataFilePath = m_DefaultFolder;
+
+            }
 		}
 
 		/// <summary>
@@ -469,7 +471,7 @@ namespace PassXYZLib
         /// <param name="kp">a key provider instance. If it is null, the key file is created from the 
         /// current system.</param>
         /// <returns>true - created key file, false - failed to create key file.</returns>
-        private bool CreateKeyFile(PassXYZLib.User user, PxKeyProvider kp = null)
+        private bool CreateKeyFile(PassXYZLib.User user, PxKeyProvider kp = null, bool isNewId = false)
 		{
 			PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
 			PassXYZ.Utils.Settings.User.Username = user.Username;
@@ -477,8 +479,10 @@ namespace PassXYZLib
 			if (kp == null)
 			{
 				pxKeyProvider = new PxKeyProvider();
-			}
-            return pxKeyProvider.CreateKeyFile(user.Username, PxDataFile.KeyFilePath);
+				isNewId = true;
+
+            }
+            return pxKeyProvider.CreateKeyFile(user.Username, PxDataFile.KeyFilePath, isNewId);
         }
 
         /// <summary>

@@ -8,10 +8,10 @@
 - **PassXYZLib** - This is the enhancement built on top of KeePassLib, such as localization, OTP etc. Version 1.x.x is built for Xamarin.Forms and 2.0.0 or above is built for .NET MAUI.
 
 ### Setup
-* Available on NuGet: [![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Media.svg?label=NuGet)](https://www.nuget.org/packages/KPCLib)
-* Build status: [![Build status](https://ci.appveyor.com/api/projects/status/4py18evnh0xxxvi1?svg=true)](https://ci.appveyor.com/project/shugaoye/kpclib-bccwi)
-* [Branch strategy](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
-* Version `1.x.x` is built using Visual Studio 2019 and version `2.0.0` or above is built using Visual Studio 2022.
+* Available on NuGet: [![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Media.svg?label=NuGet)](https://www.nuget.org/packages/passxyzlib)
+* Version `1.x.x` is built using Visual Studio 2019.
+* Version `2.x.x` or above is built using Visual Studio 2022 and .NET 7.
+* Version `3.x.x` or above is built using Visual Studio 2022 and .NET 8.
 
 
 [1]: https://github.com/passxyz/KPCLibPy
