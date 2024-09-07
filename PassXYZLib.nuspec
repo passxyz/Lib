@@ -1,70 +1,69 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
-        <id>PassXYZLib</id>
-        <version>2.2.1</version>
-        <authors>Roger Ye</authors>
-		<owners>Roger Ye</owners>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<license type="expression">LGPL-3.0-or-later</license>
-		<projectUrl>https://passxyz.github.io/KPCLib/</projectUrl>
-		<description>This is an extension of KPCLib.</description>
-      <releaseNotes>
-      - Updated to version 2.2.1
-    </releaseNotes>
-		<copyright>Roger Ye</copyright>
+      <id>PassXYZLib</id>
+      <version>3.0.1</version>
+      <authors>Roger Ye</authors>
+		  <owners>Roger Ye</owners>
+		  <requireLicenseAcceptance>false</requireLicenseAcceptance>
+		  <license type="expression">LGPL-3.0-or-later</license>
+		  <projectUrl>https://passxyz.github.io/KPCLib/</projectUrl>
+		  <description>This is an extension of KPCLib.</description>
+		  <copyright>© Roger Ye 2024</copyright>
+      <readme>docs\README.md</readme>
 		<repository url="https://github.com/passxyz/Lib" />
 		<dependencies>
-      <group targetFramework="net7.0">
+      <group targetFramework="net8.0">
         <dependency id="HtmlAgilityPack" version="1.11.57" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.3" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="3.2.0" exclude="Build,Analyzers" />
-        <dependency id="SSH.NET" Version="2023.0.0" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="3.4.0" exclude="Build,Analyzers" />
+        <dependency id="SSH.NET" version="2023.0.0" exclude="Build,Analyzers" />
       </group>
-      <group targetFramework="net7.0-android33.0">
+      <group targetFramework="net8.0-android34.0">
         <dependency id="HtmlAgilityPack" version="1.11.57" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.3" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="3.2.0" exclude="Build,Analyzers" />
-        <dependency id="SSH.NET" Version="2023.0.0" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="3.4.0" exclude="Build,Analyzers" />
+        <dependency id="SSH.NET" version="2023.0.0" exclude="Build,Analyzers" />
       </group>
-      <group targetFramework="net7.0-ios16.1">
+      <group targetFramework="net8.0-ios17.2">
         <dependency id="HtmlAgilityPack" version="1.11.57" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.3" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="3.2.0" exclude="Build,Analyzers" />
-        <dependency id="SSH.NET" Version="2023.0.0" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="3.4.0" exclude="Build,Analyzers" />
+        <dependency id="SSH.NET" version="2023.0.0" exclude="Build,Analyzers" />
       </group>
-      <group targetFramework="net7.0-maccatalyst16.1">
+      <group targetFramework="net8.0-maccatalyst17.2">
         <dependency id="HtmlAgilityPack" version="1.11.57" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.3" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="3.2.0" exclude="Build,Analyzers" />
-        <dependency id="SSH.NET" Version="2023.0.0" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="3.4.0" exclude="Build,Analyzers" />
+        <dependency id="SSH.NET" version="2023.0.0" exclude="Build,Analyzers" />
       </group>
-      <group targetFramework="net7.0-windows10.0.19041">
+      <group targetFramework="net8.0-windows10.0.19041">
         <dependency id="HtmlAgilityPack" version="1.11.57" exclude="Build,Analyzers" />
         <dependency id="Markdig" version="0.23.0" exclude="Build,Analyzers" />
         <dependency id="Newtonsoft.Json" version="13.0.3" exclude="Build,Analyzers" />
-        <dependency id="PassXYZ" version="3.2.0" exclude="Build,Analyzers" />
-        <dependency id="SSH.NET" Version="2023.0.0" exclude="Build,Analyzers" />
+        <dependency id="PassXYZ" version="3.4.0" exclude="Build,Analyzers" />
+        <dependency id="SSH.NET" version="2023.0.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
         <summary>PassXYZLib added additional features for .NET MAUI.</summary>
     </metadata>
   <files>
-    <file src="PassXYZLib/bin/Release/net7.0/PassXYZLib.dll" target="lib/net7.0/PassXYZLib.dll" />
-    <file src="PassXYZLib/bin/Release/net7.0/PureOtp.dll" target="lib/net7.0/PureOtp.dll" />
-    <file src="PassXYZLib/bin/Release/net7.0-android/PassXYZLib.dll" target="lib/net7.0-android33.0/PassXYZLib.dll" />
-    <file src="PassXYZLib/bin/Release/net7.0-android/PassXYZLib.aar" target="lib/net7.0-android33.0/PassXYZLib.aar" />
-    <file src="PassXYZLib/bin/Release/net7.0-android/PassXYZLib.xml" target="lib/net7.0-android33.0/PassXYZLib.xml" />
-    <file src="PassXYZLib/bin/Release/net7.0-android/PureOtp.dll" target="lib/net7.0-android33.0/PureOtp.dll" />
-    <file src="PassXYZLib/bin/Release/net7.0-ios/PassXYZLib.dll" target="lib/net7.0-ios16.1/PassXYZLib.dll" />
-    <file src="PassXYZLib/bin/Release/net7.0-ios/PureOtp.dll" target="lib/net7.0-ios16.1/PureOtp.dll" />
-    <file src="PassXYZLib/bin/Release/net7.0-maccatalyst/PassXYZLib.dll" target="lib/net7.0-maccatalyst16.1/PassXYZLib.dll" />
-    <file src="PassXYZLib/bin/Release/net7.0-maccatalyst/PureOtp.dll" target="lib/net7.0-maccatalyst16.1/PureOtp.dll" />
-    <file src="PassXYZLib/bin/Release/net7.0-windows10.0.19041.0/PassXYZLib.dll" target="lib/net7.0-windows10.0.19041/PassXYZLib.dll" />
-    <file src="PassXYZLib/bin/Release/net7.0-windows10.0.19041.0/PureOtp.dll" target="lib/net7.0-windows10.0.19041/PureOtp.dll" />
+    <file src="README.md" target="docs\" />
+    <file src="PassXYZLib/bin/Release/net8.0/PassXYZLib.dll" target="lib/net8.0/PassXYZLib.dll" />
+    <file src="PassXYZLib/bin/Release/net8.0/PureOtp.dll" target="lib/net8.0/PureOtp.dll" />
+    <file src="PassXYZLib/bin/Release/net8.0-android/PassXYZLib.dll" target="lib/net8.0-android34.0/PassXYZLib.dll" />
+    <file src="PassXYZLib/bin/Release/net8.0-android/PassXYZLib.xml" target="lib/net8.0-android34.0/PassXYZLib.xml" />
+    <file src="PassXYZLib/bin/Release/net8.0-android/PureOtp.dll" target="lib/net8.0-android34.0/PureOtp.dll" />
+    <file src="PassXYZLib/bin/Release/net8.0-ios/PassXYZLib.dll" target="lib/net8.0-ios17.2/PassXYZLib.dll" />
+    <file src="PassXYZLib/bin/Release/net8.0-ios/PureOtp.dll" target="lib/net8.0-ios17.2/PureOtp.dll" />
+    <file src="PassXYZLib/bin/Release/net8.0-ios/PassXYZLib.xml" target="lib/net8.0-ios17.2/PassXYZLib.xml" />
+    <file src="PassXYZLib/bin/Release/net8.0-maccatalyst/PassXYZLib.dll" target="lib/net8.0-maccatalyst17.2/PassXYZLib.dll" />
+    <file src="PassXYZLib/bin/Release/net8.0-maccatalyst/PureOtp.dll" target="lib/net8.0-maccatalyst17.2/PureOtp.dll" />
+    <file src="PassXYZLib/bin/Release/net8.0-windows10.0.19041.0/PassXYZLib.dll" target="lib/net8.0-windows10.0.19041/PassXYZLib.dll" />
+    <file src="PassXYZLib/bin/Release/net8.0-windows10.0.19041.0/PureOtp.dll" target="lib/net8.0-windows10.0.19041/PureOtp.dll" />
   </files>
 </package>
