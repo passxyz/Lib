@@ -422,7 +422,7 @@ namespace PassXYZLib.xunit
         public void PxLibVersion() 
         {
             Debug.WriteLine($"{PxLibInfo.Version}");
-            Assert.Equal(PxLibInfo.Version, new System.Version("2.1.0.0"));
+            Assert.Equal(PxLibInfo.Version, new System.Version("2.2.2.0"));
         }
 
         [Fact]

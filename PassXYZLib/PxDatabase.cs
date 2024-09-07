@@ -16,6 +16,7 @@ using KeePassLib.Security;
 using KeePassLib.Serialization;
 using PassXYZLib.Resources;
 using PassXYZ.Services;
+using PassXYZ.Utils;
 
 namespace PassXYZLib
 {
@@ -241,7 +242,9 @@ namespace PassXYZLib
 			{ 
 				m_DefaultFolder = value;
 				PassXYZ.Utils.Settings.DefaultFolder = m_DefaultFolder;
-			}
+                PxDataFile.DataFilePath = m_DefaultFolder;
+
+            }
 		}
 
 		/// <summary>
@@ -420,6 +423,7 @@ namespace PassXYZLib
 		/// If the device lock is enabled, we need to set DefaultFolder first.
 		/// </summary>
 		/// <param name="user">an instance of PassXYZLib.User</param>
+		/// <param name="kp">key provider</param>
 		public void New(PassXYZLib.User user, PxKeyProvider kp = null)
 		{
 			if (user == null) { Debug.Assert(false); throw new ArgumentNullException("PassXYZLib.User"); }
@@ -460,13 +464,14 @@ namespace PassXYZLib
 			RootGroup.Name = user.Username;
 		}
 
-		/// <summary>
-		/// Create a key file from an PxKeyProvider instance or from the system
-		/// </summary>
-		/// <param name="kp">a key provider instance. If it is null, the key file is created from the 
-		/// current system.</param>
-		/// <returns>true - created key file, false - failed to create key file.</returns>
-		private bool CreateKeyFile(PassXYZLib.User user, PxKeyProvider kp = null)
+        /// <summary>
+        /// Create a key file from an PxKeyProvider instance or from the system
+        /// </summary>
+        /// <param name="user"> new user
+        /// <param name="kp">a key provider instance. If it is null, the key file is created from the 
+        /// current system.</param>
+        /// <returns>true - created key file, false - failed to create key file.</returns>
+        private bool CreateKeyFile(PassXYZLib.User user, PxKeyProvider kp = null, bool isNewId = false)
 		{
 			PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
 			PassXYZ.Utils.Settings.User.Username = user.Username;
@@ -474,8 +479,10 @@ namespace PassXYZLib
 			if (kp == null)
 			{
 				pxKeyProvider = new PxKeyProvider();
-			}
-            return pxKeyProvider.CreateKeyFile(user.Username, PxDataFile.KeyFilePath);
+				isNewId = true;
+
+            }
+            return pxKeyProvider.CreateKeyFile(user.Username, PxDataFile.KeyFilePath, isNewId);
         }
 
         /// <summary>
@@ -484,35 +491,34 @@ namespace PassXYZLib
         /// <param name="data">KeyData source</param>
         /// <param name="username">username inside PxKeyData source</param>
         /// <returns>true - created key file, false - failed to create key file.</returns>
-        public bool CreateKeyFile(string data, string username)
+        public static bool CreateKeyFile(string data, string username)
 		{
             PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
             PassXYZ.Utils.Settings.User.Username = username;
 
-            if (data.StartsWith(PxDefs.PxKeyFile))
-			{
-				// Old key data
-                var msg = data.Substring(PxDefs.PxKeyFile.Length);
-                KeyData keyData = new OldKeyData(msg);
-
-                CreateKeyFile(keyData, username);
-            }
-            else if (data.StartsWith(PxDefs.PxJsonData))
+            if (data.IsJson())
 			{
                 // New key data
-                var msg = data.Substring(PxDefs.PxJsonData.Length);
-                KeyData keyData = new NewKeyData(msg);
+                KeyData keyData = new NewKeyData(data);
 
-				CreateKeyFile(keyData, username);
+                PxDatabase.CreateKeyFile(keyData, username);
+            }
+            else
+			{
+                // Old key data
+                KeyData keyData = new OldKeyData(data);
+
+                PxDatabase.CreateKeyFile(keyData, username);
             }
 
-            return false;
+            return true;
 		}
 
-		private bool CreateKeyFile(KeyData keyData, string username)
+		private static bool CreateKeyFile(KeyData keyData, string username)
 		{
             if (keyData != null)
             {
+				Debug.WriteLine($"CreateKeyFile with Id={keyData.Id}");
                 PxKeyProvider pxKeyProvider = new(keyData);
                 if (pxKeyProvider.IsValidUser(username))
                 {
@@ -880,11 +886,11 @@ namespace PassXYZLib
 		/// </summary>
 		/// <param name="name">The property name. Must not be <c>null</c>.</param>	
 		/// <returns>a list of entries</returns>
-		public IEnumerable<PwEntry> GetEntryListByProperty(string name)
+		public IEnumerable<PxEntry> GetEntryListByProperty(string name)
 		{
 			if (name == null) { Debug.Assert(false); throw new ArgumentNullException("name"); }
 
-			List<PwEntry> resultsList = new List<PwEntry>();
+			List<PxEntry> resultsList = new();
 
 			LinkedList<PwGroup> flatGroupList = RootGroup.GetFlatGroupList();
 
@@ -894,7 +900,7 @@ namespace PassXYZLib
 				{
 					if (!string.IsNullOrWhiteSpace(entry.CustomData.Get(name)))
 					{
-						resultsList.Add(entry);
+						resultsList.Add(new PxEntry(entry));
 					}
 				}
 			}
@@ -905,7 +911,7 @@ namespace PassXYZLib
 				{
 					if (!string.IsNullOrWhiteSpace(entry.CustomData.Get(name)))
 					{
-						resultsList.Add(entry);
+						resultsList.Add(new PxEntry(entry));
 					}
 				}
 			}
@@ -916,7 +922,7 @@ namespace PassXYZLib
 		/// Retrieve a list of entries with OTP
 		/// </summary>
 		/// <returns>a list of entries with OTP Url</returns>
-		public IEnumerable<PwEntry> GetOtpEntryList()
+		public IEnumerable<PxEntry> GetOtpEntryList()
 		{
 			return GetEntryListByProperty(PxDefs.PxCustomDataOtpUrl);
 		}

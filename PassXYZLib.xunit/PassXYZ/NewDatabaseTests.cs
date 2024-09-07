@@ -2,6 +2,7 @@
 using PassXYZ.Utils;
 using System.Diagnostics;
 using PassXYZ.Services;
+using PassXYZLib;
 
 namespace PassXYZLib.xunit.PassXYZ
 {
@@ -56,6 +57,14 @@ namespace PassXYZLib.xunit.PassXYZ
             Connect();
             Debug.WriteLine($"Username is {_testUser.Username}.");
             Assert.True((_db.IsOpen));
+        }
+
+        [Fact]
+        public void GetDeviceLockDataTest()
+        {
+            Connect();
+            var msg = PxDatabase.GetDeviceLockData(_testUser);
+            Debug.WriteLine(msg);
         }
 
         [Fact]

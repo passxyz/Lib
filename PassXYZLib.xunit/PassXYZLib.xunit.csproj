@@ -1,26 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Version>2.0.0</Version>
 
     <IsPackable>false</IsPackable>
 	  <UseMaui>true</UseMaui>
+    <MauiVersion>8.0.80</MauiVersion>
 		
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
 		
 	</PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants);PASSXYZ_CLOUD_SERVICE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants);PASSXYZ_CLOUD_SERVICE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.6.4" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.6">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="3.1.0">
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -36,6 +45,8 @@
       <DataFiles Include="$(ProjectDir)\pass_d_E8f4pEk.xyz" />
       <DataFiles Include="$(ProjectDir)\pass_e_JyHzpRxcopt.xyz" />
       <DataFiles Include="$(ProjectDir)\pass_k_JyHzpRxcopt.k4xyz" />
+      <DataFiles Include="$(ProjectDir)\pass_e_2TjEf1Dy9V2jiEgbS.xyz" />
+      <DataFiles Include="$(ProjectDir)\pass_k_2TjEf1Dy9V2jiEgbS.k4xyz" />
       <DataFiles Include="$(ProjectDir)\pass_e_EFZGmRz.xyz" />
       <DataFiles Include="$(ProjectDir)\pass_k_EFZGmRz.k4xyz" />
     </ItemGroup>

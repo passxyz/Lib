@@ -56,12 +56,20 @@ namespace PassXYZLib.xunit.PassXYZ
             }
         }
 
-        [Fact]
+        [Fact(Skip = "This test can only work in .NET 7 or below")]
         public void IsOpenDbTest()
         {
             Connect();
             Debug.WriteLine($"Username is {_testUser.Username}.");
             Assert.True((_db.IsOpen));
+        }
+
+        [Fact(Skip = "This test can only work in .NET 7 or below")]
+        public void GetDeviceLockDataTest()
+        {
+            Connect();
+            var msg = PxDatabase.GetDeviceLockData(_testUser);
+            Debug.WriteLine(msg);
         }
 
         [Fact]

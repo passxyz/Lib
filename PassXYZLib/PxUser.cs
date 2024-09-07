@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Storage;
 
 using PassXYZLib.Resources;
@@ -58,7 +59,8 @@ namespace PassXYZLib
                 if (User.IsUserExist)
                 {
                     var lastWriteTime = File.GetLastWriteTime(User.Path);
-                    return Preferences.Default.Get(User.FileName + nameof(LastWriteTime), lastWriteTime);
+                    try { return Preferences.Default.Get(User.FileName + nameof(LastWriteTime), lastWriteTime); }
+                    catch (NotImplementedException) { return lastWriteTime; }
                 }
                 else
                 {
@@ -69,7 +71,8 @@ namespace PassXYZLib
             {
                 if (User.IsUserExist) 
                 {
-                    Preferences.Default.Set(User.FileName + nameof(LastWriteTime), value);
+                    try { Preferences.Default.Set(User.FileName + nameof(LastWriteTime), value); }
+                    catch (NotImplementedException) { Debug.WriteLine("Set LastWriteTime is not implemente"); }
                 }
             }
         }
@@ -81,7 +84,8 @@ namespace PassXYZLib
                 if (User.IsUserExist)
                 {
                     var fileInfo = new FileInfo(User.Path);
-                    return Preferences.Default.Get(User.FileName + nameof(Length), fileInfo.Length);
+                    try { return Preferences.Default.Get(User.FileName + nameof(Length), fileInfo.Length); }
+                    catch (NotImplementedException) { return fileInfo.Length; }
                 }
                 else
                 {
@@ -93,7 +97,8 @@ namespace PassXYZLib
             {
                 if (User.IsUserExist)
                 {
-                    Preferences.Default.Set(User.FileName + nameof(Length), value);
+                    try { Preferences.Default.Set(User.FileName + nameof(Length), value); }
+                    catch (NotImplementedException) { Debug.WriteLine("Set Length is not implemente"); }
                 }
             }
         }
@@ -166,6 +171,12 @@ namespace PassXYZLib
             }
         }
 
+        private bool IsDataFileModified()
+        {
+            return (LastWriteTime != User.LocalFileStatus.LastWriteTime) || (Length != User.LocalFileStatus.Length);
+        }
+
+        const string IS_MODIFIED = "_IS_MODIFIED";
         /// <summary>
         /// Has the local file changed?
         /// true  - the file is changed locally,
@@ -177,8 +188,9 @@ namespace PassXYZLib
             {
                 if (User.IsUserExist)
                 {
-                    return Preferences.Default.Get(User.FileName, LastWriteTime != User.LocalFileStatus.LastWriteTime || Length != User.LocalFileStatus.Length);
-                    //return LastWriteTime != User.LocalFileStatus.LastWriteTime ||Length != User.LocalFileStatus.Length;
+                    var key = User.FileName + IS_MODIFIED;
+                    try { return Preferences.Default.Get(key, IsDataFileModified()); }
+                    catch (NotImplementedException) { return IsDataFileModified(); }
                 }
                 else
                 {
@@ -190,7 +202,9 @@ namespace PassXYZLib
             {
                 if (User.IsUserExist)
                 {
-                    Preferences.Default.Set(User.FileName, value);
+                    var key = User.FileName + IS_MODIFIED;
+                    try { Preferences.Default.Set(key, value); }
+                    catch (NotImplementedException) { Debug.WriteLine("Set IsModified is not implemente"); }
                 }
             }
         }
@@ -259,9 +273,17 @@ namespace PassXYZLib
         /// </summary>
         public static int AppTimeout
         {
-            get => Preferences.Default.Get(TimeoutKey, DefaultTimeout);
+            get 
+            {
+                try { return Preferences.Default.Get(TimeoutKey, DefaultTimeout); }
+                catch (NotImplementedException) { return DefaultTimeout; }
+            } 
 
-            set => Preferences.Default.Set(TimeoutKey, value);
+            set 
+            {
+                try { Preferences.Default.Set(TimeoutKey, value); }
+                catch (NotImplementedException) { Debug.WriteLine("Set AppTimeout is not implemente"); }
+            }
         }
 
         /// <summary>
@@ -270,7 +292,8 @@ namespace PassXYZLib
         public ImageSource ImgSource => new FontImageSource
         {
             FontFamily = "FontAwesomeSolid",
-            Glyph = IsDeviceLockEnabled ? FontAwesomeSolid.UserLock : FontAwesomeSolid.User
+            Glyph = IsDeviceLockEnabled ? FontAwesomeSolid.UserLock : FontAwesomeSolid.User,
+            Color = Color.FromRgba(0, 0, 0, 0.75)
         };
 
         private string _syncStatusIconPath = System.IO.Path.Combine(PxDataFile.IconFilePath, "ic_passxyz_disabled.png");
@@ -290,7 +313,7 @@ namespace PassXYZLib
         /// <summary>
         /// Load local users
         /// </summary>
-        public static async Task<IEnumerable<PxUser>?> LoadLocalUsersAsync(bool isBusyToLoadUsers)
+        public static async Task<IEnumerable<PxUser>?> LoadLocalUsersAsync(bool isBusyToLoadUsers = false)
         {
             if (isBusyToLoadUsers)
             {
@@ -302,6 +325,7 @@ namespace PassXYZLib
 
             return await Task.Run(() => {
                 var dataFiles = Directory.EnumerateFiles(PxDataFile.DataFilePath, PxDefs.all_xyz);
+                Debug.WriteLine($"Found {dataFiles.Count()} files.");
                 foreach (string currentFile in dataFiles)
                 {
                     string fileName = System.IO.Path.GetFileName(currentFile);

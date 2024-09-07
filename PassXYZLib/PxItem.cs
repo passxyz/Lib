@@ -556,7 +556,7 @@ namespace PassXYZLib
                 if (key == PxDefs.PxCustomDataOtpUrl)
                 {
                     // Add or update OTP URL
-                    ((PxEntry)entry).UpdateOtpUrl(value);
+                    entry.SetOtpUrl(value);
                 }
                 else
                 {

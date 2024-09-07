@@ -36,6 +36,7 @@ namespace PassXYZLib
 		/// </summary>
 		/// <param name="str">JSON data</param>
 		/// <param name="password">Password of PwGroup</param>
+		/// <param name="isJson">Is the parameter <c>str</c> a JSON string</param>
 		public PxGroup(string str, string password = null, bool isJson = true) : base(true, true)
 		{
 			if (isJson) 
