@@ -10,6 +10,7 @@ using Xunit;
 
 namespace PassXYZLib.xunit.PassXYZLib
 {
+#if PASSXYZ_CLOUD_SERVICE
     public class PxCloudConfigTests
     {
         [Fact]
@@ -96,4 +97,5 @@ namespace PassXYZLib.xunit.PassXYZLib
             Assert.NotNull(cloudServices);
         }
     }
+#endif // PASSXYZ_CLOUD_SERVICE
 }

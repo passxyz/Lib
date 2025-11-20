@@ -151,6 +151,7 @@ namespace PassXYZLib
         public const string PxCustomDataItemSubType = "PassXYZ_Type";
         public const string PxCustomDataOtpUrl = "PassXYZ_OTP_Url";
         public const string PxCustomDataIconName = "PassXYZ_Icon";
+        public const string PxCustomDataFontIcon = "PassXYZ_Font_Icon";
         public const string PxCustomDataCloudStorageName = "PassXYZ_CloudStorageName";
 
         /// <summary>

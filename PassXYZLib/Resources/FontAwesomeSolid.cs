@@ -1,7 +1,7 @@
 ﻿
 namespace PassXYZLib.Resources;
 
-static class FontAwesomeSolid
+static public class FontAwesomeSolid
 {
     // FontAwesome
     public const string Ad = "\uf641";

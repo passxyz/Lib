@@ -1,6 +1,6 @@
 ﻿namespace PassXYZLib.Resources;
 
-static class FontAwesomeBrands
+static public class FontAwesomeBrands
 {
 	public const string FirefoxBrowser = "\ue007";
 	public const string Ideal = "\ue013";

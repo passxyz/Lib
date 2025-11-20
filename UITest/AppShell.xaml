@@ -17,5 +17,10 @@
         <ShellContent Route="AboutPage" ContentTemplate="{DataTemplate local:AboutPage}">
         </ShellContent>
     </FlyoutItem>
+    <FlyoutItem Title="Icons" Icon="{FontImage FontFamily=FontAwesomeSolid, Color=Black,
+        Glyph={x:Static style:FontAwesomeSolid.Images}}">
+        <ShellContent Route="IconsPage" ContentTemplate="{DataTemplate local:IconsPage}">
+        </ShellContent>
+    </FlyoutItem>
 
 </Shell>

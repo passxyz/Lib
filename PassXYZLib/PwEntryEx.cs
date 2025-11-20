@@ -197,7 +197,8 @@ namespace PassXYZLib
                     ImgSource = new FontImageSource
                     {
                         FontFamily = "FontAwesomeSolid",
-                        Glyph = "\uf0c6"
+                        Glyph = "\uf0c6",
+                        Color = Microsoft.Maui.Graphics.Colors.Black
                     }
                 });
             }

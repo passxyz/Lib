@@ -1,6 +1,6 @@
 ﻿namespace PassXYZLib.Resources;
 
-static class FontAwesomeRegular
+static public class FontAwesomeRegular
 {
 	public const string Heart = "\uf004";
 	public const string Star = "\uf005";

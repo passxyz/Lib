@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
+using System.Linq;
 
 using Xunit;
 
 using PassXYZLib;
+using KeePassLib;
+using PassXYZLib.Resources;
+using System.Threading.Tasks;
 
 namespace xunit.PassXYZLib
 {
@@ -113,6 +117,66 @@ namespace xunit.PassXYZLib
             Assert.True(userFixture.PxDb.IsOpen);
         }
 
+        [Fact]
+        public void CustomIconTest()
+        {
+            PxDataFile.DataFilePath = System.IO.Directory.GetCurrentDirectory();
+            userFixture.user.Username = "test1";
+            userFixture.user.Password = "12345";
+            Debug.WriteLine($"KeePassKeyFileTest: {userFixture.user.Path}");
+            userFixture.PxDb.Open(userFixture.user);
+            List<PwCustomIcon> customIconList = userFixture.PxDb.CustomIcons;
+            var icons =
+                from icon in customIconList
+                where icon.Name.Contains("hp.com")
+                select icon;
+            Debug.WriteLine($"{icons.Count()}");
+            var items = userFixture.PxDb.RootGroup.Items;
+            foreach(var item in items) 
+            {
+                Debug.WriteLine($"Name={item.Name}, Icon={item.GetIconType()}");
+            }
+        }
+
+        [Fact]
+        public void SetFontIconTestAsync() 
+        {
+            PxDataFile.DataFilePath = System.IO.Directory.GetCurrentDirectory();
+            userFixture.user.Username = "test1";
+            userFixture.user.Password = "12345";
+            Debug.WriteLine($"KeePassKeyFileTest: {userFixture.user.Path}");
+            userFixture.PxDb.Open(userFixture.user);
+
+            // Add a group
+            var groupIcon = new PxFontIcon()
+            {
+                FontFamily = "FontAwesomeBrands",
+                Glyph = FontAwesomeBrands.Google
+            };
+            var group = new PwGroup() { Name = "Google", Notes = "SetFontIconTest - Group" };
+            // Act
+            group.SetFontIcon(groupIcon);
+            userFixture.PxDb.RootGroup.AddGroup(group, true);
+
+            // Add a entry
+            var entryIcon = new PxFontIcon()
+            {
+                FontFamily = "FontAwesomeBrands",
+                Glyph = FontAwesomeBrands.Yahoo
+            };
+            var entry = new PwEntry() { Name = "Yahoo", Notes = "SetFontIconTest - Yahoo" };
+            entry.SetFontIcon(entryIcon);
+            userFixture.PxDb.RootGroup.AddEntry(entry, true);
+
+            // Act
+            userFixture.PxDb.RootGroup.Name = group.Name + DateTime.UtcNow;
+
+            KPCLibLogger logger = new();
+            userFixture.PxDb.DescriptionChanged = DateTime.UtcNow;
+            userFixture.PxDb.Save(logger);
+        }
+
+#if PASSXYZ_CLOUD_SERVICE
         static void WatchFileForChanges(string path, string filename)
         {
             using (var watcher = new FileSystemWatcher())
@@ -140,7 +204,6 @@ namespace xunit.PassXYZLib
             Debug.WriteLine($"File: {e.FullPath} {e.ChangeType}");
             _isChanged = true;
         }
-        
         [Fact]
         public void FileChangedTest() 
         {
@@ -155,5 +218,6 @@ namespace xunit.PassXYZLib
             }
             Assert.Equal(user.CurrentFileStatus.IsModified, _isChanged);
         }
+#endif // PASSXYZ_CLOUD_SERVICE
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net;
-
-using Microsoft.Maui;
-using Microsoft.Maui.Controls;
+using System.Text.Json;
 using Microsoft.Maui.Devices;
 
 using HtmlAgilityPack;
@@ -369,6 +367,40 @@ namespace PassXYZLib
             }
         }
 
+        public static PxIconType GetIconType(this Item item) 
+        {
+            // 1. Get built-in icon
+            if (item.IsGroup)
+            {
+                // Group
+                if (item is PwGroup group)
+                {
+                    if (group.CustomData.Exists(PxDefs.PxCustomDataIconName))
+                    {
+                        return PxIconType.PxBuiltInIcon;
+                    }
+                }
+            }
+            else
+            {
+                // Entry
+                if (item is PwEntry entry)
+                {
+                    if (entry.CustomData.Exists(PxDefs.PxCustomDataIconName))
+                    {
+                        return PxIconType.PxBuiltInIcon;
+                    }
+                }
+            }
+
+            // 2. Get custom icon
+            if (item.GetCustomIconUuid() != PwUuid.Zero) { return PxIconType.PxEmbeddedIcon; }
+            return PxIconType.None;
+        }
+
+        /// <summary>
+        /// Set the ImgSource of an item.
+        /// </summary>
         public static void SetIcon(this Item item)
         {
             // 1. Get built-in icon
@@ -427,12 +459,99 @@ namespace PassXYZLib
                 }
             }
 
-            if(item.ImgSource == null)
+            // 3. Get font icon
+            var icon = item.GetFontIcon();
+            if(icon != null) 
+            {
+                item.ImgSource = new FontImageSource
+                {
+                    FontFamily = icon.FontFamily,
+                    Glyph = icon.Glyph,
+                    Color = Microsoft.Maui.Graphics.Colors.Black
+                };
+            }
+
+            if (item.ImgSource == null)
             {
                 SetDefaultIcon(item);
             }
         }
 
+        /// <summary>
+        /// Set the font icon of an item.
+        /// <param name="item">Instance of Item</param>
+        /// <param name="fontIcon">Instance of Item</param>
+        /// </summary>
+        public static void SetFontIcon(this Item item, PxFontIcon fontIcon) 
+        {
+            if (fontIcon == null)
+            {
+                ArgumentNullException.ThrowIfNull(fontIcon);
+            }
+
+            string jsonString = JsonSerializer.Serialize(fontIcon);
+            if (!string.IsNullOrWhiteSpace(jsonString)) 
+            {
+                // Group
+                if (item is PwGroup group)
+                {
+                    if (group.CustomData.Exists(PxDefs.PxCustomDataIconName)) 
+                    {
+                        // if there is an embedded icon, remove it
+                        group.CustomData.Remove(PxDefs.PxCustomDataIconName);
+                    }
+                    group.CustomData.Set(PxDefs.PxCustomDataFontIcon, jsonString);
+                    return;
+                }
+
+                if (item is PwEntry entry)
+                {
+                    if (entry.CustomData.Exists(PxDefs.PxCustomDataIconName)) 
+                    {
+                        // if there is an embedded icon, remove it
+                        entry.CustomData.Remove(PxDefs.PxCustomDataIconName);
+                    }
+                    entry.CustomData.Set(PxDefs.PxCustomDataFontIcon, jsonString);
+                    return;
+                }
+            }
+            throw new NullReferenceException();
+        }
+
+        /// <summary>
+        /// Get the font Icon of an item.
+        /// </summary>
+        /// <returns>an instance of PxFontIcon.</returns>
+        public static PxFontIcon? GetFontIcon(this Item item)
+        {
+            PxFontIcon? fontIcon = default;
+
+            if (item is PwGroup group)
+            {
+                if (group.CustomData.Exists(PxDefs.PxCustomDataFontIcon))
+                {
+                    // if there is an embedded icon, remove it
+                    string jsonString = group.CustomData.Get(PxDefs.PxCustomDataFontIcon);
+                    fontIcon = JsonSerializer.Deserialize<PxFontIcon?>(jsonString);
+                }
+            }
+
+            if (item is PwEntry entry)
+            {
+                if (entry.CustomData.Exists(PxDefs.PxCustomDataFontIcon))
+                {
+                    // if there is an embedded icon, remove it
+                    string jsonString = entry.CustomData.Get(PxDefs.PxCustomDataFontIcon);
+                    fontIcon = JsonSerializer.Deserialize<PxFontIcon?>(jsonString);
+                }
+            }
+            return fontIcon;
+        }
+
+        /// <summary>
+        /// Get the Custom Icon in embedded data in HTML.
+        /// </summary>
+        /// <returns>Encoded data in base64 format.</returns>
         public static string GetCustomIcon(this Item item)
         {
             if (item.GetCustomIconUuid() != PwUuid.Zero)
@@ -460,13 +579,13 @@ namespace PassXYZLib
                     Debug.WriteLine("GetCustomIcon: No PasswordDb instance");
                 }
             }
-            else 
+            else
             {
-                if (item.IsGroup) 
+                if (item.IsGroup)
                 {
                     return "folder.svg";
                 }
-                else 
+                else
                 {
                     return "file.svg";
                 }

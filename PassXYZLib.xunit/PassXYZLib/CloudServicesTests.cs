@@ -10,6 +10,7 @@ using Xunit;
 
 namespace PassXYZLib.xunit.PassXYZLib
 {
+#if PASSXYZ_CLOUD_SERVICE
     public class CloudServicesTests
     {
         ICloudServices<PxUser> _cloudServices;
@@ -119,4 +120,5 @@ namespace PassXYZLib.xunit.PassXYZLib
             service.SynchronizeFiles(PxDataFile.DataFilePath, PxCloudConfig.RemoteHomePath);
         }
     }
+#endif // PASSXYZ_CLOUD_SERVICE
 }

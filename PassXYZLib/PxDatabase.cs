@@ -26,153 +26,9 @@ namespace PassXYZLib
 	/// </summary>
 	public class PxDatabase : PwDatabase
     {
-		private PwGroup m_pwCurrentGroup = null;
+		private PwGroup? m_pwCurrentGroup = null;
 
- 		/// <summary>
-		/// If this is <c>true</c>, a database is currently open.
-		/// </summary>
-		public new bool IsOpen
-		{
-			get { return base.IsOpen; }
-		}
-
-		/// <summary>
-		/// Modification flag. If true, the class has been modified and the
-		/// user interface should prompt the user to save the changes before
-		/// closing the database for example.
-		/// </summary>
-		public new bool Modified
-		{
-			get { return base.Modified; }
-			set { base.Modified = value; }
-		}
-
-		public new DateTime SettingsChanged
-		{
-			get { return base.SettingsChanged; }
-			set { base.SettingsChanged = value; }
-		}
-
-		public new DateTime NameChanged
-		{
-			get { return base.NameChanged; }
-			set { base.NameChanged = value; }
-		}
-
-		public new DateTime DescriptionChanged
-		{
-			get { return base.DescriptionChanged; }
-			set { base.DescriptionChanged = value; }
-		}
-
-		public new DateTime DefaultUserNameChanged
-		{
-			get { return base.DefaultUserNameChanged; }
-			set { base.DefaultUserNameChanged = value; }
-		}
-
-		/// <summary>
-		/// Number of days until history entries are being deleted
-		/// in a database maintenance operation.
-		/// </summary>
-		public new uint MaintenanceHistoryDays
-		{
-			get { return base.MaintenanceHistoryDays; }
-			set { base.MaintenanceHistoryDays = value; }
-		}
-
-		public new Color Color
-		{
-			get { return base.Color; }
-			set { base.Color = value; }
-		}
-
-		public new DateTime MasterKeyChanged
-		{
-			get { return base.MasterKeyChanged; }
-			set { base.MasterKeyChanged = value; }
-		}
-
-		public new long MasterKeyChangeRec
-		{
-			get { return base.MasterKeyChangeRec; }
-			set { base.MasterKeyChangeRec = value; }
-		}
-
-		public new long MasterKeyChangeForce
-		{
-			get { return base.MasterKeyChangeForce; }
-			set { base.MasterKeyChangeForce = value; }
-		}
-
-		public new bool MasterKeyChangeForceOnce
-		{
-			get { return base.MasterKeyChangeForceOnce; }
-			set { base.MasterKeyChangeForceOnce = value; }
-		}
-
-		/// <summary>
-		/// Compression algorithm used to encrypt the data part of the database.
-		/// </summary>
-		public new PwCompressionAlgorithm Compression
-		{
-			get { return base.Compression; }
-			set { base.Compression = value; }
-		}
-
-		/// <summary>
-		/// This is a dirty-flag for the UI. It is used to indicate when an
-		/// icon list update is required.
-		/// </summary>
-		public new bool UINeedsIconUpdate
-		{
-			get { return base.UINeedsIconUpdate; }
-			set { base.UINeedsIconUpdate = value; }
-		}
-
-		public new bool RecycleBinEnabled
-		{
-			get { return base.RecycleBinEnabled; }
-			set { base.RecycleBinEnabled = value; }
-		}
-
-		public new DateTime RecycleBinChanged
-		{
-			get { return base.RecycleBinChanged; }
-			set { base.RecycleBinChanged = value; }
-		}
-
-		public new DateTime EntryTemplatesGroupChanged
-		{
-			get { return base.EntryTemplatesGroupChanged; }
-			set { base.EntryTemplatesGroupChanged = value; }
-		}
-
-		public new int HistoryMaxItems
-		{
-			get { return base.HistoryMaxItems; }
-			set { base.HistoryMaxItems = value; }
-		}
-
-		public new long HistoryMaxSize
-		{
-			get { return base.HistoryMaxSize; }
-			set { base.HistoryMaxSize = value; }
-		}
-
-		public new bool UseFileTransactions
-		{
-			get { return base.UseFileTransactions; }
-			set { base.UseFileTransactions = value; }
-		}
-
-		public new bool UseFileLocks
-		{
-			get { return base.UseFileLocks; }
-			set { base.UseFileLocks = value; }
-		}
-
-		public PwGroup CurrentGroup
+		public PwGroup? CurrentGroup
 		{
 			get {
 				if (!IsOpen) { return null; }
@@ -430,7 +286,7 @@ namespace PassXYZLib
 
 			if (user.IsDeviceLockEnabled)
 			{
-				if(!CreateKeyFile(user, kp))
+				if(!CreateKeyFile(user, kp, true))
                 {
 					throw new KeePassLib.Keys.InvalidCompositeKeyException();
 				}
@@ -471,7 +327,7 @@ namespace PassXYZLib
         /// <param name="kp">a key provider instance. If it is null, the key file is created from the 
         /// current system.</param>
         /// <returns>true - created key file, false - failed to create key file.</returns>
-        private bool CreateKeyFile(PassXYZLib.User user, PxKeyProvider kp = null, bool isNewId = false)
+        private static bool CreateKeyFile(PassXYZLib.User user, PxKeyProvider? kp = null, bool isNewId = false)
 		{
 			PassXYZ.Utils.Settings.DefaultFolder = PxDataFile.KeyFilePath;
 			PassXYZ.Utils.Settings.User.Username = user.Username;
@@ -1092,7 +948,7 @@ namespace PassXYZLib
             }
         }
 
-        private static PasswordDb instance = null;
+        private static PasswordDb? instance = null;
 
 		private PasswordDb() { }
 		public static PasswordDb Instance 
@@ -1125,7 +981,7 @@ namespace PassXYZLib
             });
         }
 
-        public PwCustomIcon GetPwCustomIcon(PwUuid pwIconId)
+        public PwCustomIcon? GetPwCustomIcon(PwUuid pwIconId)
 		{
 			if (pwIconId != PwUuid.Zero) 
 			{
@@ -1152,7 +1008,7 @@ namespace PassXYZLib
 		/// </summary>
 		/// <param name="name">The custom icon name. This can be supported by KeePass 2.48 or above.</param>	
 		/// <returns>custom icon instance</returns>
-		public PwCustomIcon GetCustomIcon(string name) 
+		public PwCustomIcon? GetCustomIcon(string name) 
 		{
 			int n = CustomIcons.Count;
 			for (int i = 0; i < n; ++i)
